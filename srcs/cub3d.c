@@ -6,13 +6,18 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/09 17:04:27 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/11 14:31:55 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
 #include <stdio.h>
+
+/*
+BONUS LIST IDEA
+ - minimap
+ - editeur map dans minimap
+*/
 
 void	pixel(t_window *win, int x, int y, int color)
 {
@@ -25,285 +30,175 @@ int		rgb(int r, int g, int b, int t)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	init_img(t_img *img)
+void	draw_line_ver(t_window *win, int x, int start, int end, int color)
 {
-	img->img_ptr = NULL;
-	img->data = NULL;
-	img->s_l = 0;
-	img->bpp = 0;
-	img->endian = 0;
-}
-
-void	free_img(t_img *img)
-{
-	(void)img;
-	/*
-	if (img->img_ptr)
-		free(img->img_ptr);
-	if (img->data)
-		free(img->data);
-	*/
-}
-
-void	init_settings(t_settings *set)
-{
-	set->path_ea = NULL;
-	set->path_no = NULL;
-	set->path_we = NULL;
-	set->path_so = NULL;
-	set->path_s = NULL;
-	set->res_x = 0;
-	set->res_y = 0;
-	set->floor = 0;
-	set->ceil = 0;
-	set->map = NULL;
-	set->player_orientation = 0;
-	set->player_x = -1;
-	set->player_y = -1;
-}
-
-void	init_win(t_window *win)
-{
-	win->mlx_ptr = NULL;
-	win->win_ptr = NULL;
-	win->filename = NULL;
-	init_settings(&win->set);
-	init_img(&win->img);
-}
-
-void	free_settings(t_settings *set)
-{
-	int i;
-
-	if (set->path_ea)
-		free(set->path_ea);
-	if (set->path_no)
-		free(set->path_no);
-	if (set->path_we)
-		free(set->path_we);
-	if (set->path_so)
-		free(set->path_so);
-	if (set->map)
+	while (start < end)
 	{
-		i = 0;
-		while (set->map[i])
-		{
-			if (set->map[i])
-			{
-				free(set->map[i]);
-				set->map[i] = NULL;
-			}
-			i++;
-		}
-		free(set->map);
-		set->map = NULL;
+		pixel(win, x, start, color);
+		start++;
 	}
 }
 
-void	free_win(t_window *win)
+int	raycasting(t_window *win)
 {
-	free_settings(&win->set);
-	free_img(&win->img);
+	int x;
+	x = 0;
+	double posX = win->set.player_x;
+	posX += 0.5;
+	double posY = win->set.player_y;
+	posY += 0.5;
+	printf("pos player %f %f\n", posX, posY);
+	printf("dir player %f %f\n", win->set.player_dir_x, win->set.player_dir_y);
+	printf("plane %f %f\n", win->scene.plane_x, win->scene.plane_y);
+	while (x < win->set.res_x)
+	{
+		//calculate rays pos and dir
+		double cameraX = 2 * x / (double)win->set.res_x - 1;
+		double rayDirX = win->set.player_dir_x + win->scene.plane_x * cameraX;
+		double rayDirY = win->set.player_dir_y + win->scene.plane_y * cameraX;
+
+		//index of the map based on player position
+		int mapX = (int)posX;
+		int mapY = (int)posY;
+		//printf("%d %d player pos", mapX, mapY);
+
+		//length of ray from current position to next x or y-side
+		double sideDistX;
+		double sideDistY;
+
+		//length of ray from one x or y-side to next x or y-side
+		double deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : fabs(1 / rayDirX));;
+		double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
+		double perpWallDist;
+
+		//what direction to step in x or y-direction (either +1 or -1)
+		int stepX;
+		int stepY;
+
+		int hit = 0; //variable to know if wall hit
+		int side; //variable to know what side of wall hit
+
+		//calculate step and initial sideDist
+		if (rayDirX < 0)
+		{
+			stepX = -1;
+			sideDistX = (posX- mapX) * deltaDistX;
+		}
+		else
+		{
+			stepX = 1;
+			sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+		}
+		if (rayDirY < 0)
+		{
+			stepY = -1;
+			sideDistY = (posY - mapY) * deltaDistY;
+		}
+		else
+		{
+			stepY = 1;
+			sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+		}
+		//digital differencial algorithm DDA
+		while (hit == 0)
+		{
+			if (sideDistX < sideDistY)
+			{
+				sideDistX += deltaDistX;
+				mapX += stepX;
+				side = 0;
+			}
+			else
+			{
+				sideDistY += deltaDistY;
+				mapY += stepY;
+				side = 1;
+			}
+			if (win->set.map[mapX][mapY] == '1')
+			{
+				hit = 1;
+				//printf("x = %d, hit %d %d\t", x, mapX, mapY);
+			}
+		}
+		if (side == 0)
+			perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
+      	else
+			perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
+
+		//Calculate height of line to draw on screen
+		int lineHeight = (int)(win->set.res_y / perpWallDist);
+
+		//calculate lowest and highest pixel to fill in current stripe
+		int drawStart = -lineHeight / 2 + win->set.res_y / 2;
+		if(drawStart < 0)
+			drawStart = 0;
+		int drawEnd = lineHeight / 2 + win->set.res_y / 2;
+		if(drawEnd >= win->set.res_y)
+			drawEnd = win->set.res_y - 1;
+		
+		int color;
+		if (win->set.map[mapX][mapY] == '1')
+		{
+			color = RED;
+		}
+		else
+			color = BLACK;
+		if (side == 1)
+			color = color /2;
+		draw_line_ver(win, x, drawStart, drawEnd, color);
+		x++;
+	}
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
+	return(1);
 }
 
-void	print_map(char **map)
+void	draw_square(t_window *win, int x, int y, int size, int color)
 {
-	int i;
-
-	printf("MAP\n");
-	i = 0;
-	while (map[i])
+	int i = 0;
+	while(i < size)
 	{
-		ft_putstr(map[i]);
-		ft_putchar('\n');
+		int j = 0;
+		while (j < size)
+		{
+			pixel(win, x + i, y + j, color);
+			j++;
+		}
 		i++;
 	}
 }
 
-void	add_to_map(t_window *win, char *line)
+void	minimap(t_window *win)
 {
-	int		len;
-	char	**tmp;
-
-	if (!win->set.map)
+	int x = 0;
+	int offsetx = win->set.res_x - 300;
+	while (win->set.map[x])
 	{
-		win->set.map = (char**)malloc(sizeof(char*) * 1);
-		if (!win->set.map)
-			quit_error(win, "ERROR MALLOC", NULL, NULL);
-		win->set.map[0] = 0;
-	}
-	len = 0;
-	while (win->set.map[len])
-		len++;
-	tmp = malloc(sizeof(char *) * (len + 2));
-	len = 0;
-	while (win->set.map[len])
-	{
-		tmp[len] = ft_strdup(win->set.map[len]);
-		len++;
-	}
-	tmp[len] = ft_strdup(line);
-	tmp[len + 1] = 0;
-	free_tab(win->set.map);
-	win->set.map = tmp;
-}
-
-int		try_open_file(char *file)
-{
-	int ret;
-
-	if ((ret = open(file, O_RDONLY)) == -1)
-		return (0);
-	close(ret);
-	return (1);
-}
-
-int		parse_arguments(t_window *win, char *line)
-{
-	if (win->set.map != NULL)
-		return (0);
-	if (line[0] == 'R' && line[1] == ' ')
-		set_res(win, line);
-	else if (line[0] == 'N' && line[1] == 'O' && line[2] == ' ')
-		set_texture(win, line);
-	else if (line[0] == 'S' && line[1] == 'O' && line[2] == ' ')
-		set_texture(win, line);
-	else if (line[0] == 'W' && line[1] == 'E' && line[2] == ' ')
-		set_texture(win, line);
-	else if (line[0] == 'E' && line[1] == 'A' && line[2] == ' ')
-		set_texture(win, line);
-	else if (line[0] == 'S' && line[1] == ' ')
-		set_texture(win, line);
-	else if (line[0] == 'F' && line[1] == ' ')
-		set_color(win, line + 2, 'F');
-	else if (line[0] == 'C' && line[1] == ' ')
-		set_color(win, line + 2, 'C');
-	else
-		return (0);
-	return (1);
-}
-
-int		good_elt(char c)
-{
-	if (c == '0' || c == '1' || c == '2'
-		|| c == 'N' || c == 'E' || c == 'S' || c == 'W')
-		return (1);
-	return (0);
-}
-
-void	check_around(t_window *win, int x, int y, int len)
-{
-	if (x == 0 || x == len - 1 || !good_elt(win->set.map[x - 1][y])
-			|| !good_elt(win->set.map[x][y - 1])
-			|| !good_elt(win->set.map[x + 1][y])
-			|| !good_elt(win->set.map[x][y + 1])
-			|| !good_elt(win->set.map[x + 1][y + 1])
-			|| !good_elt(win->set.map[x - 1][y - 1])
-			|| !good_elt(win->set.map[x + 1][y - 1])
-			|| !good_elt(win->set.map[x - 1][y + 1]))
-		quit_error(win, "The map is open.", NULL, NULL);
-}
-
-void	set_player(t_window *win, int x, int y)
-{
-	if (!win->set.player_orientation)
-	{
-		win->set.player_orientation = win->set.map[x][y];
-		win->set.player_x = x;
-		win->set.player_y = y;
-	}
-	else
-		quit_error(win, "Too many players in map. One needed.", NULL, NULL);
-}
-
-void	check_map(t_window *win)
-{
-	int x;
-	int y;
-	int len;
-
-	x = -1;
-	len = 0;
-	while (win->set.map[len])
-		len++;
-	while (win->set.map[++x])
-	{
-		y = 0;
+		int y = 0;
+		int offsety = win->set.res_y - 20;
 		while (win->set.map[x][y])
 		{
-			if (!(good_elt(win->set.map[x][y]) || win->set.map[x][y] == ' '))
-				quit_error(win, "Bad element in map.", NULL, NULL);
-			if (win->set.map[x][y] == '0' || win->set.map[x][y] == 'N'
-				|| win->set.map[x][y] == 'S' || win->set.map[x][y] == 'E'
-				|| win->set.map[x][y] == 'W' || win->set.map[x][y] == '2')
-				check_around(win, x, y, len);
-			if (win->set.map[x][y] == 'N' || win->set.map[x][y] == 'S'
-				|| win->set.map[x][y] == 'E' || win->set.map[x][y] == 'W')
-				set_player(win, x, y);
+			if (win->set.map[x][y] == '1')
+			{
+				draw_square(win, y + offsety, x + offsetx, 5, RED);
+			}
+			if (win->set.map[x][y] == '0')
+			{
+				draw_square(win, y + offsety, x + offsetx, 5, WHITE);
+			}
+			if (win->set.map[x][y] == '2')
+			{
+				draw_square(win, y + offsety, x + offsetx, 5, YELLOW);
+			}
+			if (win->set.map[x][y] == 'N' || win->set.map[x][y] == 'W')
+			{
+				draw_square(win, y + offsety, x + offsetx, 5, BLUE);
+			}
 			y++;
+			offsety += 5;
 		}
+		x++;
+		offsetx += 5;
 	}
-}
-
-void	check_settings(t_window *win)
-{
-	if (!win->set.res_x || !win->set.res_y || !win->set.path_ea
-		|| !win->set.path_no || !win->set.path_s || !win->set.path_so
-		|| !win->set.path_we || !win->set.ceil || !win->set.floor
-		|| !win->set.map)
-		quit_error(win, "Argument missing in cub file.", NULL, NULL);
-	check_map(win);
-	if (!win->set.player_orientation)
-		quit_error(win, "Missing player in map.", NULL, NULL);
-}
-
-int		set_settings(int fd, t_window *win)
-{
-	char		*line;
-	int			ret;
-
-	while ((ret = get_next_line(fd, &line)))
-	{
-		if (!parse_arguments(win, line))
-		{
-			if (good_elt(line[0]) || line[0] == ' ')
-				add_to_map(win, line);
-			else if (line && win->set.map != NULL)
-			{
-				free(line);
-				quit_error(win, "Bad formating of cub file.", NULL, NULL);
-			}
-			else if (line[0])
-			{
-				free(line);
-				quit_error(win, INVALID_DES, NULL, NULL);
-			}
-		}
-		free(line);
-	}
-	free(line);
-	check_settings(win);
-	return (1);
-}
-
-int		set_win(t_window *win, char *filename)
-{
-	int fd;
-
-	if (file_is_ext(filename, ".cub") == 0)
-		quit_error(win, CUB_FILE, NULL, NULL);
-	if ((fd = open(filename, O_RDONLY)) == -1)
-		quit_error(win, OPEN_FILE, NULL, NULL);
-	set_settings(fd, win);
-	print_settings(win->set);
-	win->mlx_ptr = mlx_init();
-	win->win_ptr = mlx_new_window(win->mlx_ptr,
-		win->set.res_x, win->set.res_y, "Cub3D");
-	win->img.img_ptr = mlx_new_image(win->mlx_ptr,
-		win->set.res_x, win->set.res_y);
-	win->img.data = (int*)mlx_get_data_addr(win->img.img_ptr, &win->img.bpp, \
-	&win->img.s_l, &win->img.endian);
-	return (1);
 }
 
 int		main(int argc, char **argv)
@@ -315,12 +210,38 @@ int		main(int argc, char **argv)
 		ft_putstr_fd(USAGE, 2);
 		return (EXIT_FAILURE);
 	}
-	init_win(&win);
-	if (set_win(&win, argv[1]) == 0)
-		return (EXIT_FAILURE);
+	window_constructor(&win);
+	window_set(&win, argv[1]);
+	// pixel(&win, 100, 100, win.set.ceil);
+	// draw_line_ver(&win, 10, 50, 150, RED);
+	//draw_square(&win, 100, 100, 40, YELLOW);
 	//print_map(win.set.map);
-	pixel(&win, 100, 100, win.set.ceil);
+	
+	if (win.set.player_orientation == 'W')
+	{
+		win.scene.plane_x = -0.66;
+		win.scene.plane_y = 0;
+	}
+	else if (win.set.player_orientation == 'E')
+	{
+		win.scene.plane_x = 0.66;
+		win.scene.plane_y = 0;
+	}
+	else if (win.set.player_orientation == 'S')
+	{
+		win.scene.plane_x = 0;
+		win.scene.plane_y = -0.66;
+	}
+	else if (win.set.player_orientation == 'N')
+	{
+		win.scene.plane_x = 0;
+		win.scene.plane_y = 0.66;
+	}
+	
+	raycasting(&win);
+	minimap(&win);
 	mlx_put_image_to_window(win.mlx_ptr, win.win_ptr, win.img.img_ptr, 0, 0);
+	//mlx_loop_hook(win.mlx_ptr, raycasting, &win);
 	hook_event(&win);
 	mlx_loop(win.mlx_ptr);
 	return (EXIT_SUCCESS);

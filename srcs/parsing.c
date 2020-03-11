@@ -6,27 +6,13 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/04 18:02:21 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/09 14:06:17 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/10 18:43:44 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 #include <math.h>
 #include <stdio.h>
-
-int		quit_error(t_window *win, char *error, void *tofree, void (*f)(char**))
-{
-	free_win(win);
-	ft_putstr_fd("\033[0;31mError: ", 2);
-	ft_putstr_fd(error, 2);
-	ft_putstr_fd("\n\033[0m", 2);
-	if (tofree && f)
-		(*f)(tofree);
-	if (LEAKS)
-		system("leaks Cub3D");
-	exit(0);
-	return (0);
-}
 
 int		file_is_ext(char *file, char *ext)
 {
@@ -45,70 +31,64 @@ int		file_is_ext(char *file, char *ext)
 	return (1);
 }
 
-void	set_res(t_window *win, char *line)
+int		good_elt(char c)
 {
-	char	**tab;
-
-	tab = ft_split(line, ' ');
-	if (len_tab(tab) != 3)
-		quit_error(win, NB_RES, tab, free_tab);
-	if (strisalpha(tab[1]) || strisalpha(tab[2]))
-		quit_error(win, ARG_RES, tab, free_tab);
-	win->set.res_x = ft_atoi(tab[1]);
-	win->set.res_y = ft_atoi(tab[2]);
-	free_tab(tab);
-	if (win->set.res_x < 50 || win->set.res_y < 50)
-		quit_error(win, VAL_RES, NULL, NULL);
-	win->set.res_x = fmin(win->set.res_x, SCREEN_MAX_X);
-	win->set.res_y = fmin(win->set.res_y, SCREEN_MAX_Y);
+	if (c == '0' || c == '1' || c == '2'
+		|| c == 'N' || c == 'E' || c == 'S' || c == 'W')
+		return (1);
+	return (0);
 }
 
-void	set_color(t_window *win, char *line, char c)
+void	check_around(t_window *win, int x, int y, int len)
 {
-	char	**tab;
-
-	tab = ft_split(line, ' ');
-	if (len_tab(tab) != 1)
-		quit_error(win, NB_COLOR, tab, free_tab);
-	free_tab(tab);
-	tab = ft_split(line, ',');
-	if (len_tab(tab) != 3)
-		quit_error(win, NB_COLOR, tab, free_tab);
-	if (strisalpha(tab[0]) || strisalpha(tab[0]) || strisalpha(tab[2]))
-		quit_error(win, ARG_COLOR, tab, free_tab);
-	if (ft_atoi(tab[0]) < 0 || ft_atoi(tab[0]) > 255 || ft_atoi(tab[1]) < 0
-		|| ft_atoi(tab[1]) > 255 || ft_atoi(tab[2]) < 0
-		|| ft_atoi(tab[2]) > 255)
-		quit_error(win, VAL_COLOR, NULL, NULL);
-	if (c == 'C')
-		win->set.ceil = rgb(ft_atoi(tab[0]), ft_atoi(tab[1]),
-			ft_atoi(tab[2]), 0);
-	else
-		win->set.floor = rgb(ft_atoi(tab[0]), ft_atoi(tab[1]),
-			ft_atoi(tab[2]), 0);
-	free_tab(tab);
+	if (x == 0 || x == len - 1 || !good_elt(win->set.map[x - 1][y])
+			|| !good_elt(win->set.map[x][y - 1])
+			|| !good_elt(win->set.map[x + 1][y])
+			|| !good_elt(win->set.map[x][y + 1])
+			|| !good_elt(win->set.map[x + 1][y + 1])
+			|| !good_elt(win->set.map[x - 1][y - 1])
+			|| !good_elt(win->set.map[x + 1][y - 1])
+			|| !good_elt(win->set.map[x - 1][y + 1]))
+		quit_error(win, "The map is open.", NULL, NULL);
 }
 
-void	set_texture(t_window *win, char *line)
+void	check_map(t_window *win)
 {
-	char	**tab;
+	int x;
+	int y;
+	int len;
 
-	tab = ft_split(line, ' ');
-	if (len_tab(tab) != 2)
-		quit_error(win, NB_TEX, tab, free_tab);
-	if (!file_is_ext(tab[1], ".xpm"))
-		quit_error(win, XPM_FILE, tab, free_tab);
-	if ((try_open_file(tab[1])) == 0)
-		quit_error(win, OPEN_TEX_FILE, tab, free_tab);
-	if (tab[0][0] == 'N')
-		win->set.path_no = ft_strdup(tab[1]);
-	else if (tab[0][0] == 'S' && tab[0][1] == 'O')
-		win->set.path_so = ft_strdup(tab[1]);
-	else if (tab[0][0] == 'W')
-		win->set.path_we = ft_strdup(tab[1]);
-	else if (tab[0][0] == 'E')
-		win->set.path_ea = ft_strdup(tab[1]);
-	else if (tab[0][0] == 'S' && tab[0][1] == '\0')
-		win->set.path_s = ft_strdup(tab[1]);
-	free_tab(tab);
+	x = -1;
+	len = 0;
+	while (win->set.map[len])
+		len++;
+	while (win->set.map[++x])
+	{
+		y = 0;
+		while (win->set.map[x][y])
+		{
+			if (!(good_elt(win->set.map[x][y]) || win->set.map[x][y] == ' '))
+				quit_error(win, "Bad element in map.", NULL, NULL);
+			if (win->set.map[x][y] == '0' || win->set.map[x][y] == 'N'
+				|| win->set.map[x][y] == 'S' || win->set.map[x][y] == 'E'
+				|| win->set.map[x][y] == 'W' || win->set.map[x][y] == '2')
+				check_around(win, x, y, len);
+			if (win->set.map[x][y] == 'N' || win->set.map[x][y] == 'S'
+				|| win->set.map[x][y] == 'E' || win->set.map[x][y] == 'W')
+				set_player(win, x, y);
+			y++;
+		}
+	}
+}
+
+void	check_settings(t_window *win)
+{
+	if (!win->set.res_x || !win->set.res_y || !win->set.path_ea
+		|| !win->set.path_no || !win->set.path_s || !win->set.path_so
+		|| !win->set.path_we || !win->set.ceil || !win->set.floor
+		|| !win->set.map)
+		quit_error(win, "Argument missing in cub file.", NULL, NULL);
+	check_map(win);
+	if (!win->set.player_orientation)
+		quit_error(win, "Missing player in map.", NULL, NULL);
 }

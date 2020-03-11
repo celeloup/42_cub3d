@@ -6,13 +6,13 @@
 #    By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 11:01:29 by celeloup          #+#    #+#              #
-#    Updated: 2020/03/09 14:05:25 by celeloup         ###   ########.fr        #
+#    Updated: 2020/03/10 17:25:57 by celeloup         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			= Cub3D
 
-SRCS1			= cub3d.c parsing.c events.c utils.c
+SRCS1			= cub3d.c parsing.c events.c utils.c structures_constructor.c structures_destructor.c structures_set.c settings_set.c
 
 SRCS			= $(addprefix $(SRCS_DIR), $(SRCS1))
 OBJS			= $(addprefix $(OBJS_DIR), $(SRCS1:.c=.o))

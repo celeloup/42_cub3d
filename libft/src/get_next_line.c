@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 14:41:32 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/03 18:08:12 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/10 13:14:13 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		read_line(int fd, char **line, char *buff)
 		return (clean_return(&tmp, line, -1));
 	if (*line[0] != '\0')
 		return (clean_return(&tmp, NULL, 1));
-	return (clean_return(&tmp, NULL, ret));
+	return (clean_return(&tmp, line, ret));
 }
 
 int		get_next_line(int fd, char **line)
