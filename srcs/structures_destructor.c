@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:26:54 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 14:54:12 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/12 11:53:27 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@ void	settings_destructor(t_settings *set)
 		free(set->map);
 		set->map = NULL;
 	}
+	img_destructor(&set->text_ea);
+	img_destructor(&set->text_we);
+	img_destructor(&set->text_no);
+	img_destructor(&set->text_so);
 }
 
 void	window_destructor(t_window *win)

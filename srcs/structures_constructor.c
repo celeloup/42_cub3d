@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 16:25:16 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/12 11:51:27 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ void	settings_constructor(t_settings *set)
 	set->path_we = NULL;
 	set->path_so = NULL;
 	set->path_s = NULL;
+	img_constructor(&set->text_ea);
+	img_constructor(&set->text_we);
+	img_constructor(&set->text_no);
+	img_constructor(&set->text_so);
 	set->res_x = 0;
 	set->res_y = 0;
 	set->floor = 0;

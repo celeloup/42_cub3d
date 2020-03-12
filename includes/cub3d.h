@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 16:26:11 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/12 15:39:05 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ typedef	struct			s_sprite
 	int					height;
 }						t_sprite;
 */
+typedef struct			s_img
+{
+	void				*img_ptr;
+	int					*data;
+	int					s_l;
+	int					bpp;
+	int					endian;
+	int					width;
+	int					height;
+	char				pad[4];
+}						t_img;
 
 typedef struct			s_settings
 {
@@ -46,6 +57,10 @@ typedef struct			s_settings
 	char				*path_we;
 	char				*path_ea;
 	char				*path_s;
+	t_img				text_no;
+	t_img				text_so;
+	t_img				text_we;
+	t_img				text_ea;
 	int					res_x;
 	int					res_y;
 	int					floor;
@@ -58,15 +73,6 @@ typedef struct			s_settings
 	double				player_dir_y;
 }						t_settings;
 
-typedef struct			s_img
-{
-	void				*img_ptr;
-	int					*data;
-	int					s_l;
-	int					bpp;
-	int					endian;
-	char				pad[4];
-}						t_img;
 
 typedef struct			s_scene
 {

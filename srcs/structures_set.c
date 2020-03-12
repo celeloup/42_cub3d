@@ -6,11 +6,28 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:56:03 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 17:27:48 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/03/12 15:43:09 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+#include <stdio.h>
+void	set_img_text(t_window *win)
+{	
+
+	win->set.text_no.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_no, &win->set.text_no.width, &win->set.text_no.height);
+	win->set.text_no.data = (int*)mlx_get_data_addr(win->set.text_no.img_ptr, &win->set.text_no.bpp, &win->set.text_no.s_l, &win->set.text_no.endian);
+	
+	win->set.text_so.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_so, &win->set.text_so.width, &win->set.text_so.height);
+	win->set.text_so.data = (int*)mlx_get_data_addr(win->set.text_so.img_ptr, &win->set.text_so.bpp, &win->set.text_so.s_l, &win->set.text_so.endian);
+	
+	win->set.text_ea.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_ea, &win->set.text_ea.width, &win->set.text_ea.height);
+	win->set.text_ea.data = (int*)mlx_get_data_addr(win->set.text_ea.img_ptr, &win->set.text_ea.bpp, &win->set.text_ea.s_l, &win->set.text_ea.endian);
+	
+	win->set.text_we.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_we, &win->set.text_we.width, &win->set.text_we.height);
+	win->set.text_we.data = (int*)mlx_get_data_addr(win->set.text_we.img_ptr, &win->set.text_we.bpp, &win->set.text_we.s_l, &win->set.text_we.endian);
+
+}
 
 void	window_set(t_window *win, char *filename)
 {
@@ -29,6 +46,7 @@ void	window_set(t_window *win, char *filename)
 		win->set.res_x, win->set.res_y);
 	win->img.data = (int*)mlx_get_data_addr(win->img.img_ptr, &win->img.bpp, \
 	&win->img.s_l, &win->img.endian);
+	set_img_text(win);
 }
 
 void	settings_set(int fd, t_window *win)
