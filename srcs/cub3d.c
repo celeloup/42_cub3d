@@ -27,18 +27,18 @@ BONUS LIST IDEA
  - petite histoire ?
 */
 
-void	pixel(t_window *win, int x, int y, int color)
+void pixel(t_window *win, int x, int y, int color)
 {
 	if (x >= 0 && x < win->set.res_x && y >= 0 && y < win->set.res_y)
 		(win->img.data)[y * win->set.res_x + x] = color;
 }
 
-int		rgb(int r, int g, int b, int t)
+int rgb(int r, int g, int b, int t)
 {
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	draw_line_ver(t_window *win, int x, int start, int end, int color)
+void draw_line_ver(t_window *win, int x, int start, int end, int color)
 {
 	while (start < end)
 	{
@@ -47,10 +47,10 @@ void	draw_line_ver(t_window *win, int x, int start, int end, int color)
 	}
 }
 
-void	draw_square(t_window *win, int x, int y, int size, int color)
+void draw_square(t_window *win, int x, int y, int size, int color)
 {
 	int i = 0;
-	while(i < size)
+	while (i < size)
 	{
 		int j = 0;
 		while (j < size)
@@ -62,7 +62,7 @@ void	draw_square(t_window *win, int x, int y, int size, int color)
 	}
 }
 
-void	minimap(t_window *win)
+void minimap(t_window *win)
 {
 	int px = (int)win->set.player_x;
 	int py = (int)win->set.player_y;
@@ -74,7 +74,7 @@ void	minimap(t_window *win)
 		int offsety = win->set.res_y - 20;
 		while (win->set.map[x][y])
 		{
-			
+
 			if (win->set.map[x][y] == '1')
 			{
 				draw_square(win, y + offsety, x + offsetx, 5, RED);
@@ -101,14 +101,14 @@ void	minimap(t_window *win)
 	}
 }
 
-int	raycasting(t_window *win)
+int raycasting(t_window *win)
 {
 	int x;
 	x = 0;
 	double posX = win->set.player_x;
-	//posX += 0.5;
 	double posY = win->set.player_y;
-	//posY += 0.5;
+	double ZBuffer[win->set.res_x];
+
 	while (x < win->set.res_x)
 	{
 		//calculate rays pos and dir
@@ -135,13 +135,13 @@ int	raycasting(t_window *win)
 		int stepY;
 
 		int hit = 0; //variable to know if wall hit
-		int side; //variable to know what side of wall hit
+		int side;	 //variable to know what side of wall hit
 
 		//calculate step and initial sideDist
 		if (rayDirX < 0)
 		{
 			stepX = -1;
-			sideDistX = (posX- mapX) * deltaDistX;
+			sideDistX = (posX - mapX) * deltaDistX;
 		}
 		else
 		{
@@ -173,7 +173,7 @@ int	raycasting(t_window *win)
 				mapY += stepY;
 				side = 1;
 			}
-			if (win->set.map[mapX][mapY] == '1' || win->set.map[mapX][mapY] == '2')
+			if (win->set.map[mapX][mapY] == '1')
 			{
 				hit = 1;
 				//printf("x = %d, hit %d %d\t", x, mapX, mapY);
@@ -181,7 +181,7 @@ int	raycasting(t_window *win)
 		}
 		if (side == 0)
 			perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
-      	else
+		else
 			perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
 
 		//Calculate height of line to draw on screen
@@ -189,16 +189,15 @@ int	raycasting(t_window *win)
 
 		//calculate lowest and highest pixel to fill in current stripe
 		int drawStart = -lineHeight / 2 + win->set.res_y / 2;
-		if(drawStart < 0)
+		if (drawStart < 0)
 			drawStart = 0;
 		int drawEnd = lineHeight / 2 + win->set.res_y / 2;
-		if(drawEnd >= win->set.res_y)
+		if (drawEnd >= win->set.res_y)
 			drawEnd = win->set.res_y;
-		
+
 		draw_line_ver(win, x, 0, drawStart, win->set.ceil);
 		draw_line_ver(win, x, drawEnd, win->set.res_y, win->set.floor);
-		
-		
+
 		//PARTIE TEXTURE
 		int color;
 
@@ -208,7 +207,7 @@ int	raycasting(t_window *win)
 		else
 			wallX = posX + perpWallDist * rayDirX;
 		wallX -= floor(wallX);
-		
+
 		//determiner quelle texture en fonction orientation
 		t_img texture;
 		if (win->set.map[mapX][mapY] == '1')
@@ -233,19 +232,19 @@ int	raycasting(t_window *win)
 			texX = texture.width - texX - 1;
 		if (side == 1 && rayDirY < 0)
 			texX = texture.width - texX - 1;
-		
+
 		double step = 1.0 * texture.height / lineHeight;
 		double texPos = (drawStart - win->set.res_y / 2 + lineHeight / 2) * step;
 		int y = drawStart;
-		
+
 		while (y < drawEnd)
 		{
 			int texY = (int)texPos & (texture.height - 1);
 			texPos += step;
 			if (win->set.map[mapX][mapY] == '1')
 				color = texture.data[texture.height * texY + texX];
-			else
-				color = YELLOW;
+			//else
+				//color = YELLOW;
 			pixel(win, x, y, color);
 			y++;
 		}
@@ -275,35 +274,198 @@ int	raycasting(t_window *win)
 			color = BLACK;
 		draw_line_ver(win, x, drawStart, drawEnd, color);
 		*/
+		ZBuffer[x] = perpWallDist;
 		x++;
 	}
-	minimap(win);
-	return(1);
+	//SPRITE RENDER
+	int spriteOrder[win->scene.sprite_nb];
+	double spriteDistance[win->scene.sprite_nb];
+	int i = 0;
+	while (i < win->scene.sprite_nb)
+	{
+		spriteOrder[i] = i;
+		spriteDistance[i] = ((posX - win->scene.sprite_list[i].x) * (posX - win->scene.sprite_list[i].x) + (posY - win->scene.sprite_list[i].y) * (posY - win->scene.sprite_list[i].y));
+		//printf("sprite %d ordre %d distance %f\n", i, spriteOrder[i], spriteDistance[i]);
+		i++;
+	}
+	sort_sprites(spriteOrder, spriteDistance, win->scene.sprite_nb);
+	i = 0;
+	while (i < win->scene.sprite_nb)
+	{
+		//printf("sprite %d ordre %d distance %f\n", i, spriteOrder[i], spriteDistance[i]);
+		double spriteX = win->scene.sprite_list[spriteOrder[i]].x - posX;
+		double spriteY = win->scene.sprite_list[spriteOrder[i]].y - posY;
+
+		double invDet = 1.0 / (win->scene.plane_x * win->set.player_dir_y - win->set.player_dir_x * win->scene.plane_y);
+
+		double transformX = invDet * (win->set.player_dir_y * spriteX - win->set.player_dir_x * spriteY);
+		double transformY = invDet * (-win->scene.plane_y * spriteX + win->scene.plane_x * spriteY);
+
+		int spriteScreenX = (int)((win->set.res_x / 2) * (1 + transformX / transformY));
+
+		//calculate height of the sprite on screen
+		int spriteHeight = abs((int)(win->set.res_y / (transformY)));
+		//calculate lowest and highest pixel to fill in current stripe
+		int drawStartY = -spriteHeight / 2 + win->set.res_y / 2;
+		if (drawStartY < 0)
+			drawStartY = 0;
+		int drawEndY = spriteHeight / 2 + win->set.res_y / 2;
+		if (drawEndY >= win->set.res_y)
+			drawEndY = win->set.res_y - 1;
+
+		//calculate width of the sprite
+		int spriteWidth = abs((int)(win->set.res_y / (transformY)));
+		int drawStartX = -spriteWidth / 2 + spriteScreenX;
+		if (drawStartX < 0)
+			drawStartX = 0;
+		int drawEndX = spriteWidth / 2 + spriteScreenX;
+		if (drawEndX >= win->set.res_x)
+			drawEndX = win->set.res_x - 1;
+
+		int stripe = drawStartX;
+		while (stripe < drawEndX)
+		{
+			int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * win->set.text_s.width / spriteWidth) / 256;
+			if (transformY > 0 && stripe > 0 && stripe < win->set.res_x && transformY < ZBuffer[stripe])
+			{
+				int y = drawStartY;
+				while (y < drawEndY)
+				{
+					int d = (y)*256 - win->set.res_y * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+					int texY = ((d * win->set.text_s.height) / spriteHeight) / 256;
+					//get current color from the texture
+					int color = win->set.text_s.data[win->set.text_s.width * texY + texX];
+					if ((color & 0x00FFFFFF) != 0)
+					{
+						pixel(win, stripe, y, color);//paint pixel if it isn't black, black is the invisible color
+					}	
+					y++;
+				}
+			}
+			stripe++;
+		}
+		i++;
+	}
+	return (1);
 }
 
-int		render_next_frame(t_window *win)
+void sort_sprites(int *order, double *dist, int nb_sprite)
+{
+	int en_desordre = 1;
+	while (en_desordre)
+	{
+		en_desordre = 0;
+		int j = 0;
+		while (j < nb_sprite - 1)
+		{
+			if (dist[j] > dist[j + 1])
+			{
+				double tmp_dist = dist[j + 1];
+				dist[j + 1] = dist[j];
+				dist[j] = tmp_dist;
+				int tmp = order[j + 1];
+				order[j + 1] = order[j];
+				order[j] = tmp;
+				en_desordre = 1;
+			}
+			j++;
+		}
+	}
+}
+
+int render_next_frame(t_window *win)
 {
 	mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
 	win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x, win->set.res_y);
-	win->img.data = (int*)mlx_get_data_addr(win->img.img_ptr, \
-		&win->img.bpp, &win->img.s_l, &win->img.endian);
+	win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
+											 &win->img.bpp, &win->img.s_l, &win->img.endian);
 	raycasting(win);
 	minimap(win);
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
 	return (1);
 }
 
-int		main(int argc, char **argv)
+void print_sprites(t_scene *scene)
+{
+	int i = 0;
+	while (i < scene->sprite_nb)
+	{
+		printf("sprite %d at (%f,%f)\n", i, scene->sprite_list[i].x, scene->sprite_list[i].y);
+		i++;
+	}
+}
+
+void get_file_header(unsigned char *file_header, t_window *win, int padding_size)
+{
+	int	file_size;
+
+	file_size = 14 + 40 + (4 * win->set.res_x + padding_size) * win->set.res_y;
+	file_header[ 0] = (unsigned char)('B');
+    file_header[ 1] = (unsigned char)('M');
+    file_header[ 2] = (unsigned char)(file_size    );
+    file_header[ 3] = (unsigned char)(file_size>> 8);
+    file_header[ 4] = (unsigned char)(file_size>>16);
+    file_header[ 5] = (unsigned char)(file_size>>24);
+    file_header[10] = (unsigned char)(14 + 40);
+	file_header[ 0 + 14] = (unsigned char)(40);
+    file_header[ 4 + 14] = (unsigned char)(win->set.res_x    );
+    file_header[ 5 + 14] = (unsigned char)(win->set.res_x>> 8);
+    file_header[ 6 + 14] = (unsigned char)(win->set.res_x>>16);
+    file_header[ 7 + 14] = (unsigned char)(win->set.res_x>>24);
+    file_header[ 8 + 14] = (unsigned char)(win->set.res_y    );
+    file_header[ 9 + 14] = (unsigned char)(win->set.res_y>> 8);
+    file_header[10 + 14] = (unsigned char)(win->set.res_y>>16);
+    file_header[11 + 14] = (unsigned char)(win->set.res_y>>24);
+    file_header[12 + 14] = (unsigned char)(1);
+    file_header[14 + 14] = (unsigned char)(4 * 8);
+}
+
+/**
+ * https://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
+*/
+void screenshot(t_window *win)
+{
+	int				fd;
+	unsigned char	padding[3];
+	int				padding_size;
+	unsigned char	file_header[14 + 40];
+	int				i;
+
+	fd = open("screenshot.bmp", O_CREAT | O_WRONLY | O_TRUNC);
+	padding[0] = 0;
+	padding[1] = 0;
+	padding[2] = 0;
+	padding_size = (4 - (win->set.res_x * 4) % 4) % 4;
+	ft_bzero(file_header, 14 + 40);
+	get_file_header(file_header, win, padding_size);
+	render_next_frame(win);
+	write(fd, file_header, 14 + 40);
+	i = win->set.res_y -1;
+	while (i > 0)
+	{
+		write(fd, (unsigned char *)win->img.data+(i * win->set.res_x * 4), 4 * win->set.res_x);
+		write(fd, padding, padding_size);
+		i--;
+	}
+	close(fd);
+	ft_putstr_fd("\033[32;1mScreenshot saved as 'screenshot.bmp'.\033[0m\n", 1);
+	close_window(win);
+}
+
+int main(int argc, char **argv)
 {
 	t_window win;
 
-	if (argc < 2 || argc > 3)
+	if (argc < 2 || argc > 3 || ( argc == 3 && ft_strcmp(argv[2], "--save")))
 	{
 		ft_putstr_fd(USAGE, 2);
 		return (EXIT_FAILURE);
 	}
+
 	window_constructor(&win);
 	window_set(&win, argv[1]);
+
+	// MOVE ALL OF THAT ELSEWHERE 
 	if (win.set.player_orientation == 'W')
 	{
 		win.scene.plane_x = -0.66;
@@ -324,8 +486,16 @@ int		main(int argc, char **argv)
 		win.scene.plane_x = 0;
 		win.scene.plane_y = 0.66;
 	}
+	set_sprites(&win);
+	//print_sprites(&win.scene);
+
+	if(argc == 3)
+		screenshot(&win);
 	mlx_loop_hook(win.mlx_ptr, render_next_frame, &win);
+	//render_next_frame(&win);
+	//mlx_put_image_to_window(win.mlx_ptr, win.win_ptr, win.set.text_s.img_ptr, 0, 0);
 	hook_event(&win);
 	mlx_loop(win.mlx_ptr);
+	close_window(&win);
 	return (EXIT_SUCCESS);
 }

@@ -71,6 +71,7 @@ char				*ft_strcpy(char *dest, const char *src);
 char				*ft_strjoinfree(char *s1, char *s2);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
 int					get_next_line(int fd, char **line);
+int					ft_strcmp(char const *s1, char const *s2);
 
 t_list				*ft_lstnew(void const *content);
 void				ft_lstadd_front(t_list **alst, t_list *new);

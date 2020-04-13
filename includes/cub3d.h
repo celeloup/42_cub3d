@@ -15,6 +15,12 @@
 
 # define LEAKS 0
 
+# if defined(__APPLE__)
+#  include <key_macos.h>
+# else
+#  include <key_linux.h>
+# endif
+
 # include "../libft/src/libft.h"
 # include "error_define.h"
 # include "lgl_define.h"
@@ -30,14 +36,6 @@
 # define PURPLE 0x925CC3
 # define BLACK 0x000000
 
-/*
-typedef	struct			s_sprite
-{
-	void				*img;
-	int					width;
-	int					height;
-}						t_sprite;
-*/
 typedef struct			s_img
 {
 	void				*img_ptr;
@@ -50,6 +48,14 @@ typedef struct			s_img
 	char				pad[4];
 }						t_img;
 
+typedef	struct			s_sprite
+{
+	t_img				texture;
+	double				x;
+	double				y;
+}						t_sprite;
+
+
 typedef struct			s_settings
 {
 	char				*path_no;
@@ -61,6 +67,7 @@ typedef struct			s_settings
 	t_img				text_so;
 	t_img				text_we;
 	t_img				text_ea;
+	t_img				text_s;
 	int					res_x;
 	int					res_y;
 	int					floor;
@@ -78,6 +85,12 @@ typedef struct			s_scene
 {
 	double 				plane_x;
 	double				plane_y;
+	//wall (tab)
+	t_sprite			*sprite_list;
+	int					sprite_nb;
+	//player x y
+	//player dir x y
+	//map ?
 }						t_scene;
 
 typedef struct			s_window
@@ -111,6 +124,7 @@ void	window_set(t_window *win, char *filename);
 void	settings_set(int fd, t_window *win);
 int		parse_arguments(t_window *win, char *line);
 void	add_to_map(t_window *win, char *line);
+void	set_sprites(t_window *win);
 
 /*
 ** SETTINGS_SET.C
@@ -142,6 +156,7 @@ int		quit_error(t_window *win, char *error, void *tofree, void (*f)(char**));
 */
 void	pixel(t_window *win, int x, int y, int color);
 int		rgb(int r, int g, int b, int t);
+void	sort_sprites(int *order, double *dist, int nb_sprite);
 
 
 /*

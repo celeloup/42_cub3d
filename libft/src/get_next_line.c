@@ -73,9 +73,9 @@ int		read_line(int fd, char **line, char *buff)
 int		get_next_line(int fd, char **line)
 {
 	int			nl_char;
-	static char	buff[OPEN_MAX][BUFFER_SIZE + 1] = {{0}};
+	static char	buff[_SC_OPEN_MAX][BUFFER_SIZE + 1] = {{0}};
 
-	if (fd < 0 || fd > OPEN_MAX || line == NULL || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > _SC_OPEN_MAX || line == NULL || BUFFER_SIZE <= 0)
 		return (-1);
 	if ((*line = ft_strdup("")) == NULL)
 		return (-1);

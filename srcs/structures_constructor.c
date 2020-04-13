@@ -16,6 +16,7 @@ void	scene_constructor(t_scene *scene)
 {
 	scene->plane_x = 0;
 	scene->plane_y = 0;
+	scene->sprite_list = NULL;
 }
 
 void	img_constructor(t_img *img)
@@ -38,6 +39,7 @@ void	settings_constructor(t_settings *set)
 	img_constructor(&set->text_we);
 	img_constructor(&set->text_no);
 	img_constructor(&set->text_so);
+	img_constructor(&set->text_s);
 	set->res_x = 0;
 	set->res_y = 0;
 	set->floor = 0;

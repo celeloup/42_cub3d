@@ -62,7 +62,8 @@ SRC_NAME = ft_memset.c \
 	ft_strcpy.c \
 	ft_strjoinfree.c \
 	ft_strncpy.c \
-	get_next_line.c
+	get_next_line.c \
+	ft_strcmp.c
 
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
@@ -72,7 +73,7 @@ SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 
-CFLAGS = -Werror -Wall -Wextra
+CFLAGS = #-Werror -Wall -Wextra
 
 ##################
 ##    COLORS    ##

@@ -42,7 +42,7 @@ void	set_color(t_window *win, char *line, char c)
 	tab = ft_split(line, ',');
 	if (len_tab(tab) != 3)
 		quit_error(win, NB_COLOR, tab, free_tab);
-	if (strisalpha(tab[0]) || strisalpha(tab[0]) || strisalpha(tab[2]))
+	if (strisalpha(tab[0]) || strisalpha(tab[1]) || strisalpha(tab[2]))
 		quit_error(win, ARG_COLOR, tab, free_tab);
 	if (ft_atoi(tab[0]) < 0 || ft_atoi(tab[0]) > 255 || ft_atoi(tab[1]) < 0
 		|| ft_atoi(tab[1]) > 255 || ft_atoi(tab[2]) < 0

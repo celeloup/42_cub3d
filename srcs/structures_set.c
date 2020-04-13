@@ -12,9 +12,54 @@
 
 #include "../includes/cub3d.h"
 #include <stdio.h>
-void	set_img_text(t_window *win)
-{	
 
+void	sprite_constructor(t_sprite *sprite, t_img texture, int x, int y)
+{
+	sprite->texture = texture;
+	sprite->x = x + 0.5;
+	sprite->y = y + 0.5;
+}
+
+void	set_sprites(t_window *win)
+{
+	int j;
+	int numSprites = 0;
+	int i = 0;
+	//COUNT NUMBER OF SPRITES IN MAP
+	while (win->set.map[i])
+	{
+		j = 0;
+		while (win->set.map[i][j])
+		{
+			if (win->set.map[i][j] == '2')
+				numSprites++;
+			j++;
+		}
+		i++;
+	}
+	win->scene.sprite_nb = numSprites;
+	//CREATE THE TAB OF SPRITES
+	win->scene.sprite_list = malloc(sizeof(t_sprite) * (numSprites));
+	i = 0;
+	int x = 0;
+	while (win->set.map[i])
+	{
+		j = 0;
+		while (win->set.map[i][j])
+		{
+			if (win->set.map[i][j] == '2')
+			{
+				sprite_constructor(&win->scene.sprite_list[x], win->set.text_s, i, j);
+				x++;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void	set_img_text(t_window *win)
+{
 	win->set.text_no.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_no, &win->set.text_no.width, &win->set.text_no.height);
 	win->set.text_no.data = (int*)mlx_get_data_addr(win->set.text_no.img_ptr, &win->set.text_no.bpp, &win->set.text_no.s_l, &win->set.text_no.endian);
 	
@@ -27,6 +72,8 @@ void	set_img_text(t_window *win)
 	win->set.text_we.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_we, &win->set.text_we.width, &win->set.text_we.height);
 	win->set.text_we.data = (int*)mlx_get_data_addr(win->set.text_we.img_ptr, &win->set.text_we.bpp, &win->set.text_we.s_l, &win->set.text_we.endian);
 
+	win->set.text_s.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, win->set.path_s, &win->set.text_s.width, &win->set.text_s.height);
+	win->set.text_s.data = (int*)mlx_get_data_addr(win->set.text_s.img_ptr, &win->set.text_s.bpp, &win->set.text_s.s_l, &win->set.text_s.endian);
 }
 
 void	window_set(t_window *win, char *filename)

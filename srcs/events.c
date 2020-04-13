@@ -15,41 +15,41 @@
 
 int		key_press(int keycode, t_window *win)
 {
-	if (keycode == ESC_KEY)
+	if (keycode == K_ESC)
 		close_window(win);
-	if (keycode == W_KEY)
+	if (keycode == K_Z) //avancer
 	{
 		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x + win->set.player_dir_x * move_speed - 0.02)][(int)win->set.player_y] == '0')
+		if (win->set.map[(int)(win->set.player_x + win->set.player_dir_x * move_speed - 0.02)][(int)win->set.player_y] != '1')
 			win->set.player_x += win->set.player_dir_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->set.player_dir_y * move_speed - 0.02)] == '0')
+		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->set.player_dir_y * move_speed - 0.02)]  != '1')
 			win->set.player_y += win->set.player_dir_y * move_speed;
 	}
-	if (keycode == A_KEY)
+	if (keycode == K_Q) //gauche
 	{
 		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x - win->scene.plane_x * move_speed + 0.02)][(int)win->set.player_y] == '0')
+		if (win->set.map[(int)(win->set.player_x - win->scene.plane_x * move_speed + 0.02)][(int)win->set.player_y] != '1')
 			win->set.player_x -= win->scene.plane_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->scene.plane_y * move_speed + 0.02)] == '0')
+		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->scene.plane_y * move_speed + 0.02)] != '1')
 			win->set.player_y -= win->scene.plane_y * move_speed;
 	}
-	if (keycode == S_KEY)
+	if (keycode == K_S) //reculer
 	{
 		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x - win->set.player_dir_x * move_speed + 0.02)][(int)win->set.player_y] == '0')
+		if (win->set.map[(int)(win->set.player_x - win->set.player_dir_x * move_speed + 0.02)][(int)win->set.player_y] != '1')
 			win->set.player_x -= win->set.player_dir_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->set.player_dir_y * move_speed + 0.02)] == '0')
+		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->set.player_dir_y * move_speed + 0.02)] != '1')
 			win->set.player_y -= win->set.player_dir_y * move_speed;
 	}
-	if (keycode == D_KEY)
+	if (keycode == K_D) //right
 	{
 		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x + win->scene.plane_x * move_speed - 0.02)][(int)win->set.player_y] == '0')
+		if (win->set.map[(int)(win->set.player_x + win->scene.plane_x * move_speed - 0.02)][(int)win->set.player_y] != '1')
 			win->set.player_x += win->scene.plane_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->scene.plane_y * move_speed - 0.02)] == '0')
+		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->scene.plane_y * move_speed - 0.02)] != '1')
 			win->set.player_y += win->scene.plane_y * move_speed;
 	}
-	if (keycode == RIGHT_KEY)
+	if (keycode == K_AR_R)
 	{
 		double rotSpeed = 0.04;
 		double oldDirX = win->set.player_dir_x;
@@ -59,7 +59,7 @@ int		key_press(int keycode, t_window *win)
 		win->scene.plane_x = win->scene.plane_x * cos(-rotSpeed) - win->scene.plane_y * sin(-rotSpeed);
 		win->scene.plane_y = oldPlaneX * sin(-rotSpeed) + win->scene.plane_y * cos(-rotSpeed);
 	}
-	if (keycode == LEFT_KEY)
+	if (keycode == K_AR_L)
 	{
 		double rotSpeed = -0.04;
 		double oldDirX = win->set.player_dir_x;
@@ -75,7 +75,7 @@ int		key_press(int keycode, t_window *win)
 
 void	hook_event(t_window *win)
 {
-	mlx_hook(win->win_ptr, 2, 0, key_press, win);
+	mlx_hook(win->win_ptr, 2, (1L << 0), key_press, win);
 	mlx_hook(win->win_ptr, 17, (1L << 17), close_window, win);
 }
 
