@@ -13,7 +13,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define LEAKS 0
+# define LEAKS 1
 
 # if defined(__APPLE__)
 #  include <key_macos.h>
@@ -157,6 +157,7 @@ int		quit_error(t_window *win, char *error, void *tofree, void (*f)(char**));
 void	pixel(t_window *win, int x, int y, int color);
 int		rgb(int r, int g, int b, int t);
 void	sort_sprites(int *order, double *dist, int nb_sprite);
+int		render_next_frame(t_window *win);
 
 
 /*
@@ -168,5 +169,11 @@ void	print_map(char **map);
 void	print_settings(t_settings set);
 void	free_tab(char **tab);
 int		len_tab(char **tab);
+
+/*
+** NORME.C (fonctions normées à distribuer dans fichiers)
+*/
+void	get_file_header(unsigned char *file_header, t_window *win, int pad_size);
+void	screenshot(t_window *win);
 
 #endif

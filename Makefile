@@ -12,7 +12,7 @@
 
 NAME			= Cub3D
 
-SRCS1			= cub3d.c parsing.c events.c utils.c structures_constructor.c structures_destructor.c structures_set.c settings_set.c
+SRCS1			= cub3d.c parsing.c events.c utils.c structures_constructor.c structures_destructor.c structures_set.c settings_set.c norme.c
 
 SRCS			= $(addprefix $(SRCS_DIR), $(SRCS1))
 OBJS			= $(addprefix $(OBJS_DIR), $(SRCS1:.c=.o))
@@ -21,16 +21,16 @@ SRCS_DIR		= ./srcs/
 OBJS_DIR		= ./objs/
 INCLUDES_DIR	= ./includes/
 LIBFT_DIR		= ./libft/
+MLX_DIR			= ./minilibx-linux/
 
 LIBFT			= $(LIBFT_DIR)libft.a
 MINILIBX		= $(MLX_DIR)libmlx.a
 HEADER			= $(INCLUDES_DIR)cub3d.h
 
-MLXFLAGS		= -lm -lmlx -lXext -lX11 -lbsd
-CFLAGS			= #-Wall -Wextra -Werror #-O2 -g3 -fsanitize=address,undefined -Wpadded
-CC				= gcc
+MLXFLAGS		= -lm -lXext -lX11 -lbsd
+CFLAGS			= #-Wall -Wextra -Werror -O2 -g#3 -fsanitize=address,undefined -Wpadded
+CC				= clang
 
-MLX_DIR		= ./minilibx/
 INCLUDES	= $(addprefix -I, $(INCLUDES_DIR) $(LIBFT_DIR) $(LIBVECT_DIR) $(MLX_DIR))
 FRAMEWORK	= -framework OpenGL -framework Appkit
 
@@ -65,7 +65,7 @@ all: launch
 
 launch:
 	$(MAKE) $(LIBFT)
-	#$(MAKE) $(MINILIBX)
+	$(MAKE) $(MINILIBX)
 	echo $(_CLEAR)$(_YELLOW)"building - "$(_GREEN)$(NAME)$(_END)
 	$(MAKE) $(NAME)
 	echo $(_GREEN)"\nDone."$(_END)$(_SHOW_CURS)
@@ -83,7 +83,7 @@ $(MINILIBX): FORCE
 FORCE:
 
 $(NAME): $(OBJS_DIR) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) $(MINILIBX) -o $(NAME)
 
 $(OBJS): $(OBJS_DIR)%.o: $(SRCS_DIR)%.c $(HEADER)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
