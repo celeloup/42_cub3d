@@ -61,3 +61,14 @@ void	window_destructor(t_window *win)
 	settings_destructor(&win->set);
 	img_destructor(&win->img);
 }
+/*
+void	scene_destructor(t_scene *scene)
+{
+	int i = 0;
+	while (i < scene->sprite_nb)
+	{
+		free(scene->sprite_list[i]);
+		i++;
+	}
+}
+*/

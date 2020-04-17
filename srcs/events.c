@@ -69,7 +69,6 @@ int		key_press(int keycode, t_window *win)
 		win->scene.plane_x = win->scene.plane_x * cos(-rotSpeed) - win->scene.plane_y * sin(-rotSpeed);
 		win->scene.plane_y = oldPlaneX * sin(-rotSpeed) + win->scene.plane_y * cos(-rotSpeed);
 	}
-
 	return (0);
 }
 
@@ -85,7 +84,7 @@ int		close_window(t_window *win)
 	mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
 	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
 	if (LEAKS)
-		system("leaks Cub3D");
+		system("valgrind --tool=memcheck --leak-check=summary --leak-resolution=high --show-reachable=yes ./Cub3D");
 	exit(0);
 	return (0);
 }

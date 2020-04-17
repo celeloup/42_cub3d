@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures_constructor.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/12 11:51:27 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/17 16:24:12 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	scene_constructor(t_scene *scene)
 	scene->plane_x = 0;
 	scene->plane_y = 0;
 	scene->sprite_list = NULL;
+	scene->sprite_nb = 0;
 }
 
 void	img_constructor(t_img *img)
@@ -26,6 +27,7 @@ void	img_constructor(t_img *img)
 	img->s_l = 0;
 	img->bpp = 0;
 	img->endian = 0;
+	img->name = NULL;
 }
 
 void	settings_constructor(t_settings *set)

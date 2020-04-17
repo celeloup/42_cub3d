@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/12 15:39:05 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/17 16:23:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define LEAKS 1
+# define LEAKS 0
 
 # if defined(__APPLE__)
 #  include <key_macos.h>
@@ -36,6 +36,18 @@
 # define PURPLE 0x925CC3
 # define BLACK 0x000000
 
+typedef struct			s_vector_d
+{
+	double				x;
+	double				y;
+}						t_vector_d;
+
+typedef struct			s_vector_i
+{
+	int					x;
+	int					y;
+}						t_vector_i;
+
 typedef struct			s_img
 {
 	void				*img_ptr;
@@ -45,6 +57,7 @@ typedef struct			s_img
 	int					endian;
 	int					width;
 	int					height;
+	char				*name;
 	char				pad[4];
 }						t_img;
 
@@ -74,6 +87,7 @@ typedef struct			s_settings
 	int					ceil;
 	char				**map;
 	char				player_orientation;
+	char				pad[7];
 	double				player_x;
 	double				player_y;
 	double				player_dir_x;
@@ -91,6 +105,7 @@ typedef struct			s_scene
 	//player x y
 	//player dir x y
 	//map ?
+	char				pad[4];
 }						t_scene;
 
 typedef struct			s_window
@@ -158,7 +173,8 @@ void	pixel(t_window *win, int x, int y, int color);
 int		rgb(int r, int g, int b, int t);
 void	sort_sprites(int *order, double *dist, int nb_sprite);
 int		render_next_frame(t_window *win);
-
+int		raycasting(t_window *win, t_vector_d player);
+void	draw_line_ver(t_window *win, int x, int start, int end, int color);
 
 /*
 ** UTILS.C
@@ -169,6 +185,18 @@ void	print_map(char **map);
 void	print_settings(t_settings set);
 void	free_tab(char **tab);
 int		len_tab(char **tab);
+
+/*
+** SPRITE.C
+*/
+void		sort_sprites(int *order, double *dist, int nb_sprite);
+t_vector_d	get_sprite_transform(t_window *win, int i, int *sprite_order);
+t_vector_i	get_sprite_dimension(t_window *win, t_vector_d transform);
+void		sprite_draw(t_window *win, int stripe, t_vector_i sprite,
+	int s_screen_x);
+int			*get_sprite_order(t_window *win);
+int			get_sprite_screen_x(t_window *win, t_vector_d transform);
+void		sprite_render(t_window *win, double *z_buf);
 
 /*
 ** NORME.C (fonctions normées à distribuer dans fichiers)

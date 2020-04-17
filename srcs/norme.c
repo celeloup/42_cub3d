@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   norme.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/15 16:02:05 by user42            #+#    #+#             */
+/*   Updated: 2020/04/15 16:26:56 by user42           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 void	get_file_header(unsigned char *file_header, t_window *win, int pad_size)
@@ -26,7 +38,8 @@ void	get_file_header(unsigned char *file_header, t_window *win, int pad_size)
 }
 
 /*
-** https://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
+** https://stackoverflow.com/questions/2654480
+** /writing-bmp-image-in-pure-c-c-without-other-libraries
 */
 
 void	screenshot(t_window *win)
@@ -55,4 +68,15 @@ void	screenshot(t_window *win)
 	close(fd);
 	ft_putstr_fd("\033[32;1mScreenshot saved as 'screenshot.bmp'.\033[0m\n", 1);
 	close_window(win);
+}
+
+void pixel(t_window *win, int x, int y, int color)
+{
+	if (x >= 0 && x < win->set.res_x && y >= 0 && y < win->set.res_y)
+		(win->img.data)[y * win->set.res_x + x] = color;
+}
+
+int rgb(int r, int g, int b, int t)
+{
+	return (t << 24 | r << 16 | g << 8 | b);
 }
