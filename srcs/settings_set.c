@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   settings_set.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 15:11:37 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/12 12:40:04 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/18 20:03:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
 
 void	set_res(t_window *win, char *line)
 {
@@ -69,10 +68,7 @@ void	set_texture(t_window *win, char *line)
 	if ((try_open_file(tab[1])) == 0)
 		quit_error(win, OPEN_TEX_FILE, tab, free_tab);
 	if (tab[0][0] == 'N')
-	{
 		win->set.path_no = ft_strdup(tab[1]);
-		//set_img_text(win);
-	}
 	else if (tab[0][0] == 'S' && tab[0][1] == 'O')
 		win->set.path_so = ft_strdup(tab[1]);
 	else if (tab[0][0] == 'W')
@@ -89,24 +85,18 @@ void	set_player(t_window *win, int x, int y)
 	if (!win->set.player_orientation)
 	{
 		win->set.player_orientation = win->set.map[x][y];
-		win->set.player_x = x + 0.5;
-		win->set.player_y = y + 0.5;
+		win->scene.player.x = x + 0.5;
+		win->scene.player.y = y + 0.5;
 		if (win->set.player_orientation == 'W')
-		{
-			win->set.player_dir_x = 0;
-			win->set.player_dir_y = -1;
-		}
+			win->scene.player_direction = d_vec_constructor(0, -1);
 		else if (win->set.player_orientation == 'E')
-		{
-			win->set.player_dir_y = 1;
-		}
+			win->scene.player_direction = d_vec_constructor(0, 1);
 		else if (win->set.player_orientation == 'S')
-			win->set.player_dir_x = 1;
+			win->scene.player_direction = d_vec_constructor(1, 0);
 		else if (win->set.player_orientation == 'N')
-			win->set.player_dir_x = -1;
+			win->scene.player_direction = d_vec_constructor(-1, 0);
 		win->set.map[x][y] = '0';
 	}
 	else
 		quit_error(win, "Too many players in map. One needed.", NULL, NULL);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 11:55:34 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 16:27:16 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/18 20:04:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ void	print_settings(t_settings set)
 	printf("path_s -> %s\n", set.path_s);
 	printf("floor -> %x\n", set.floor);
 	printf("ceil -> %x\n\n", set.ceil);
-	printf("player x = %f\n", set.player_x);
-	printf("player y = %f\n", set.player_y);
-	printf("player dir %f ; %f\n", set.player_dir_x, set.player_dir_y);
 	print_map(set.map);
 }
 

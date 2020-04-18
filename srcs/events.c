@@ -3,72 +3,122 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 11:54:17 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/12 16:49:24 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/18 21:13:56 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 #include <stdio.h>
 
+void	move_forward(t_window *win)
+{
+	double move_speed;
+
+	move_speed = 0.1;
+	if (win->set.map[(int)(win->scene.player.x + win->scene.player_direction.x \
+		* move_speed - 0.02)][(int)win->scene.player.y] != '1')
+		win->scene.player.x += win->scene.player_direction.x * move_speed;
+	if (win->set.map[(int)win->scene.player.x][(int)(win->scene.player.y \
+			+ win->scene.player_direction.y * move_speed - 0.02)] != '1')
+		win->scene.player.y += win->scene.player_direction.y * move_speed;
+}
+
+void	move_left(t_window *win)
+{
+	double move_speed;
+
+	move_speed = 0.1;
+	if (win->set.map[(int)(win->scene.player.x - win->scene.plane.x \
+		* move_speed + 0.02)][(int)win->scene.player.y] != '1')
+		win->scene.player.x -= win->scene.plane.x * move_speed;
+	if (win->set.map[(int)win->scene.player.x][(int)(win->scene.player.y \
+		- win->scene.plane.y * move_speed + 0.02)] != '1')
+		win->scene.player.y -= win->scene.plane.y * move_speed;
+}
+
+void	move_backward(t_window *win)
+{
+	double move_speed;
+
+	move_speed = 0.1;
+	if (win->set.map[(int)(win->scene.player.x - win->scene.player_direction.x \
+			* move_speed + 0.02)][(int)win->scene.player.y] != '1')
+		win->scene.player.x -= win->scene.player_direction.x * move_speed;
+	if (win->set.map[(int)win->scene.player.x][(int)(win->scene.player.y \
+			- win->scene.player_direction.y * move_speed + 0.02)] != '1')
+		win->scene.player.y -= win->scene.player_direction.y * move_speed;
+}
+
+void	move_right(t_window *win)
+{
+	double move_speed;
+
+	move_speed = 0.1;
+	if (win->set.map[(int)(win->scene.player.x + win->scene.plane.x \
+			* move_speed - 0.02)][(int)win->scene.player.y] != '1')
+		win->scene.player.x += win->scene.plane.x * move_speed;
+	if (win->set.map[(int)win->scene.player.x][(int)(win->scene.player.y \
+			+ win->scene.plane.y * move_speed - 0.02)] != '1')
+		win->scene.player.y += win->scene.plane.y * move_speed;
+}
+
+void	look_right(t_window *win)
+{
+	double rot_speed;
+	double old_dir_x;
+	double old_plane_x;
+
+	rot_speed = 0.04;
+	old_dir_x = win->scene.player_direction.x;
+	win->scene.player_direction.x = win->scene.player_direction.x \
+		* cos(-rot_speed) - win->scene.player_direction.y * sin(-rot_speed);
+	win->scene.player_direction.y = old_dir_x * sin(-rot_speed) \
+		+ win->scene.player_direction.y * cos(-rot_speed);
+	old_plane_x = win->scene.plane.x;
+	win->scene.plane.x = win->scene.plane.x * cos(-rot_speed) \
+		- win->scene.plane.y * sin(-rot_speed);
+	win->scene.plane.y = old_plane_x * sin(-rot_speed) \
+		+ win->scene.plane.y * cos(-rot_speed);
+}
+
+void	look_left(t_window *win)
+{
+	double rot_speed;
+	double old_dir_x;
+	double old_plane_x;
+
+	rot_speed = -0.04;
+	old_dir_x = win->scene.player_direction.x;
+	win->scene.player_direction.x = win->scene.player_direction.x \
+		* cos(-rot_speed) - win->scene.player_direction.y * sin(-rot_speed);
+	win->scene.player_direction.y = old_dir_x * sin(-rot_speed) \
+		+ win->scene.player_direction.y * cos(-rot_speed);
+	old_plane_x = win->scene.plane.x;
+	win->scene.plane.x = win->scene.plane.x * cos(-rot_speed) \
+		- win->scene.plane.y * sin(-rot_speed);
+	win->scene.plane.y = old_plane_x * sin(-rot_speed) + win->scene.plane.y \
+		* cos(-rot_speed);
+}
+
 int		key_press(int keycode, t_window *win)
 {
 	if (keycode == K_ESC)
 		close_window(win);
-	if (keycode == K_Z) //avancer
-	{
-		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x + win->set.player_dir_x * move_speed - 0.02)][(int)win->set.player_y] != '1')
-			win->set.player_x += win->set.player_dir_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->set.player_dir_y * move_speed - 0.02)]  != '1')
-			win->set.player_y += win->set.player_dir_y * move_speed;
-	}
-	if (keycode == K_Q) //gauche
-	{
-		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x - win->scene.plane_x * move_speed + 0.02)][(int)win->set.player_y] != '1')
-			win->set.player_x -= win->scene.plane_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->scene.plane_y * move_speed + 0.02)] != '1')
-			win->set.player_y -= win->scene.plane_y * move_speed;
-	}
-	if (keycode == K_S) //reculer
-	{
-		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x - win->set.player_dir_x * move_speed + 0.02)][(int)win->set.player_y] != '1')
-			win->set.player_x -= win->set.player_dir_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y - win->set.player_dir_y * move_speed + 0.02)] != '1')
-			win->set.player_y -= win->set.player_dir_y * move_speed;
-	}
-	if (keycode == K_D) //right
-	{
-		double move_speed = 0.1;
-		if (win->set.map[(int)(win->set.player_x + win->scene.plane_x * move_speed - 0.02)][(int)win->set.player_y] != '1')
-			win->set.player_x += win->scene.plane_x * move_speed;
-		if (win->set.map[(int)win->set.player_x][(int)(win->set.player_y + win->scene.plane_y * move_speed - 0.02)] != '1')
-			win->set.player_y += win->scene.plane_y * move_speed;
-	}
+	if (keycode == K_Z)
+		move_forward(win);
+	if (keycode == K_Q)
+		move_left(win);
+	if (keycode == K_S)
+		move_backward(win);
+	if (keycode == K_D)
+		move_right(win);
 	if (keycode == K_AR_R)
-	{
-		double rotSpeed = 0.04;
-		double oldDirX = win->set.player_dir_x;
-		win->set.player_dir_x = win->set.player_dir_x * cos(-rotSpeed) - win->set.player_dir_y * sin(-rotSpeed);
-		win->set.player_dir_y = oldDirX * sin(-rotSpeed) + win->set.player_dir_y * cos(-rotSpeed);
-		double oldPlaneX = win->scene.plane_x;
-		win->scene.plane_x = win->scene.plane_x * cos(-rotSpeed) - win->scene.plane_y * sin(-rotSpeed);
-		win->scene.plane_y = oldPlaneX * sin(-rotSpeed) + win->scene.plane_y * cos(-rotSpeed);
-	}
+		look_right(win);
 	if (keycode == K_AR_L)
-	{
-		double rotSpeed = -0.04;
-		double oldDirX = win->set.player_dir_x;
-		win->set.player_dir_x = win->set.player_dir_x * cos(-rotSpeed) - win->set.player_dir_y * sin(-rotSpeed);
-		win->set.player_dir_y = oldDirX * sin(-rotSpeed) + win->set.player_dir_y * cos(-rotSpeed);
-		double oldPlaneX = win->scene.plane_x;
-		win->scene.plane_x = win->scene.plane_x * cos(-rotSpeed) - win->scene.plane_y * sin(-rotSpeed);
-		win->scene.plane_y = oldPlaneX * sin(-rotSpeed) + win->scene.plane_y * cos(-rotSpeed);
-	}
+		look_left(win);
 	return (0);
 }
 
@@ -84,7 +134,8 @@ int		close_window(t_window *win)
 	mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
 	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
 	if (LEAKS)
-		system("valgrind --tool=memcheck --leak-check=summary --leak-resolution=high --show-reachable=yes ./Cub3D");
+		system("valgrind --tool=memcheck --leak-check=summary \
+			--leak-resolution=high --show-reachable=yes ./Cub3D");
 	exit(0);
 	return (0);
 }

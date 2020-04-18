@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 17:19:04 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 20:28:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 ** - minimap
 ** - editeur map dans minimap
 ** - pieces secretes
-** - mini zelda : tu dois recuperer les trois triforces pour acceder à l'epee de legende
+** - mini zelda : tu dois recuperer les trois triforces pour
+** acceder à l'epee de legende
 ** - mini puzzle (trois mecaniques differentes)
 ** - son musique
 ** - animation, particule
@@ -27,12 +28,12 @@
 ** - petite histoire ?
 */
 
-void	draw_line_ver(t_window *win, int x, int start, int end, int color)
+void	v_line(t_window *win, int x, t_vector_i limits, int color)
 {
-	while (start < end)
+	while (limits.x < limits.y)
 	{
-		pixel(win, x, start, color);
-		start++;
+		pixel(win, x, limits.x, color);
+		limits.x++;
 	}
 }
 
@@ -77,7 +78,7 @@ void	minimap(t_window *win)
 				draw_square(win, y + offsety, x + offsetx, 5, YELLOW);
 			if (win->set.map[x][y] == 'N' || win->set.map[x][y] == 'W')
 				draw_square(win, y + offsety, x + offsetx, 5, BLUE);
-			if (x == (int)win->set.player_x && y == (int)win->set.player_y)
+			if (x == (int)win->scene.player.x && y == (int)win->scene.player.y)
 				draw_square(win, y + offsety, x + offsetx, 5, BLUE);
 			y++;
 			offsety += 5;
@@ -94,10 +95,6 @@ int		render_next_frame(t_window *win)
 		win->set.res_y);
 	win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
 		&win->img.bpp, &win->img.s_l, &win->img.endian);
-	t_vector_d player;
-	player.x = win->set.player_x;
-	player.y = win->set.player_y;
-	win->scene.player = player;
 	raycasting(win);
 	minimap(win);
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/16 17:25:57 by user42            #+#    #+#             */
-/*   Updated: 2020/04/18 17:23:04 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 20:01:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_vector_d	get_delta_dist(t_vector_d ray)
 }
 
 /*
-** Digital Diffencial Analysis
+** Digital Diffencial Analysis algorithm
 */
 
 int			dda_algorithm(t_vector_d *side_dist, t_vector_d *delta_dist, \
@@ -110,9 +110,9 @@ t_vector_i	get_wall_texture(t_window *win, t_img texture, \
 	else
 		side = 1;
 	if (side == 0)
-		wall_x = win->set.player_y + perp_wall_dist * ray.y;
+		wall_x = win->scene.player.y + perp_wall_dist * ray.y;
 	else
-		wall_x = win->set.player_x + perp_wall_dist * ray.x;
+		wall_x = win->scene.player.x + perp_wall_dist * ray.x;
 	wall_x -= floor(wall_x);
 	w_texture.x = (int)(wall_x * (double)texture.width);
 	if (side == 0 && ray.x > 0)
@@ -126,7 +126,7 @@ t_vector_i	get_wall_texture(t_window *win, t_img texture, \
 ** pwd is perpendicular wall distance
 */
 
-int			test(t_window *win, int x, double *pwd, t_vector_d ray)
+void		test(t_window *win, int x, double *pwd, t_vector_d ray)
 {
 	t_vector_i	draw_limits;
 	int			color;
@@ -142,8 +142,9 @@ int			test(t_window *win, int x, double *pwd, t_vector_d ray)
 	w_texture = get_wall_texture(win, texture, *pwd, ray);
 	texture_pos = (draw_limits.x - win->set.res_y / 2 + (int)(win->set.res_y / \
 		*pwd) / 2) * (1.0 * texture.height / (int)(win->set.res_y / *pwd));
-	draw_line_ver(win, x, 0, draw_limits.x, win->set.ceil);
-	draw_line_ver(win, x, draw_limits.y, win->set.res_y, win->set.floor);
+	v_line(win, x, i_vec_constructor(0, draw_limits.x), win->set.ceil);
+	v_line(win, x, i_vec_constructor(draw_limits.y, win->set.res_y), \
+		win->set.floor);
 	while (draw_limits.x < draw_limits.y)
 	{
 		w_texture.y = (int)texture_pos & (texture.height - 1);
@@ -152,7 +153,6 @@ int			test(t_window *win, int x, double *pwd, t_vector_d ray)
 		pixel(win, x, draw_limits.x, color);
 		draw_limits.x++;
 	}
-	return (1);
 }
 
 int			raycasting(t_window *win)
@@ -165,9 +165,9 @@ int			raycasting(t_window *win)
 	x = 0;
 	while (x < win->set.res_x)
 	{
-		ray.x = win->set.player_dir_x + win->scene.plane_x * \
+		ray.x = win->scene.player_direction.x + win->scene.plane.x * \
 			(2 * x / (double)win->set.res_x - 1);
-		ray.y = win->set.player_dir_y + win->scene.plane_y * \
+		ray.y = win->scene.player_direction.y + win->scene.plane.y * \
 			(2 * x / (double)win->set.res_x - 1);
 		test(win, x, &perp_wall_dist, ray);
 		z_buffer[x] = perp_wall_dist;

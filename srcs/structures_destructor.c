@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures_destructor.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:26:54 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/12 11:53:27 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/18 18:23:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 void	img_destructor(t_img *img)
 {
 	(void)img;
-	/*
-	if (img->img_ptr)
-		free(img->img_ptr);
-	if (img->data)
-		free(img->data);
-	*/
 }
 
 void	settings_destructor(t_settings *set)
@@ -50,25 +44,14 @@ void	settings_destructor(t_settings *set)
 		free(set->map);
 		set->map = NULL;
 	}
-	img_destructor(&set->text_ea);
-	img_destructor(&set->text_we);
-	img_destructor(&set->text_no);
-	img_destructor(&set->text_so);
 }
 
 void	window_destructor(t_window *win)
 {
 	settings_destructor(&win->set);
 	img_destructor(&win->img);
+	mlx_destroy_image(win->mlx_ptr, win->set.text_ea.img_ptr);
+	mlx_destroy_image(win->mlx_ptr, win->set.text_so.img_ptr);
+	mlx_destroy_image(win->mlx_ptr, win->set.text_no.img_ptr);
+	mlx_destroy_image(win->mlx_ptr, win->set.text_we.img_ptr);
 }
-/*
-void	scene_destructor(t_scene *scene)
-{
-	int i = 0;
-	while (i < scene->sprite_nb)
-	{
-		free(scene->sprite_list[i]);
-		i++;
-	}
-}
-*/

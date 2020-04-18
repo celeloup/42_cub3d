@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 17:19:55 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 20:10:11 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ typedef struct			s_img
 	int					width;
 	int					height;
 	char				*name;
-	char				pad[4];
 }						t_img;
 
 typedef	struct			s_sprite
@@ -87,31 +86,24 @@ typedef struct			s_settings
 	int					ceil;
 	char				**map;
 	char				player_orientation;
-	char				pad[7];
-	double				player_x;
-	double				player_y;
-	double				player_dir_x;
-	double				player_dir_y;
 }						t_settings;
-
 
 typedef struct			s_scene
 {
-	double 				plane_x;
-	double				plane_y;
+	t_vector_d			plane;
+	t_vector_d			player;
+	t_vector_d			player_direction;
 	t_sprite			*sprite_list;
 	int					sprite_nb;
-	t_vector_d			player;
-	char				pad[4];
 }						t_scene;
 
 typedef struct			s_window
 {
-	t_settings			set;
 	char				*filename;
 	void				*mlx_ptr;
 	void				*win_ptr;
 	t_img				img;
+	t_settings			set;
 	t_scene				scene;
 }						t_window;
 
@@ -128,6 +120,8 @@ void	window_constructor(t_window *win);
 void	img_destructor(t_img *img);
 void	settings_destructor(t_settings *set);
 void	window_destructor(t_window *win);
+t_vector_i	i_vec_constructor(int x, int y);
+t_vector_d	d_vec_constructor(double x, double y);
 
 /*
 ** STRUCTURES_SET.C
@@ -171,7 +165,8 @@ int		rgb(int r, int g, int b, int t);
 void	sort_sprites(int *order, double *dist, int nb_sprite);
 int		render_next_frame(t_window *win);
 int		raycasting(t_window *win);
-void	draw_line_ver(t_window *win, int x, int start, int end, int color);
+void	v_line(t_window *win, int x, t_vector_i limits, \
+	int color);
 
 /*
 ** UTILS.C

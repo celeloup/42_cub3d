@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/16 16:38:37 by user42            #+#    #+#             */
-/*   Updated: 2020/04/16 20:17:11 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 20:09:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ t_vector_d	get_sprite_transform(t_window *win, int i, int *sprite_order)
 	double		sprite_y;
 	double		inv_det;
 
-	sprite_x = win->scene.sprite_list[sprite_order[i]].x - win->set.player_x;
-	sprite_y = win->scene.sprite_list[sprite_order[i]].y - win->set.player_y;
-	inv_det = 1.0 / (win->scene.plane_x * win->set.player_dir_y
-		- win->set.player_dir_x * win->scene.plane_y);
-	transform.x = inv_det * (win->set.player_dir_y * sprite_x
-		- win->set.player_dir_x * sprite_y);
-	transform.y = inv_det * (-win->scene.plane_y * sprite_x
-		+ win->scene.plane_x * sprite_y);
+	sprite_x = win->scene.sprite_list[sprite_order[i]].x - win->scene.player.x;
+	sprite_y = win->scene.sprite_list[sprite_order[i]].y - win->scene.player.y;
+	inv_det = 1.0 / (win->scene.plane.x * win->scene.player_direction.y
+		- win->scene.player_direction.x * win->scene.plane.y);
+	transform.x = inv_det * (win->scene.player_direction.y * sprite_x
+		- win->scene.player_direction.x * sprite_y);
+	transform.y = inv_det * (-win->scene.plane.y * sprite_x
+		+ win->scene.plane.x * sprite_y);
 	free(sprite_order);
 	return (transform);
 }
@@ -120,10 +120,11 @@ int			*get_sprite_order(t_window *win)
 	while (i < win->scene.sprite_nb)
 	{
 		sprite_order[i] = i;
-		sprite_distance[i] = ((win->set.player_x - win->scene.sprite_list[i].x)
-			* (win->set.player_x - win->scene.sprite_list[i].x)
-			+ (win->set.player_y - win->scene.sprite_list[i].y)
-			* (win->set.player_y - win->scene.sprite_list[i].y));
+		sprite_distance[i] = ((win->scene.player.x \
+			- win->scene.sprite_list[i].x) \
+			* (win->scene.player.x - win->scene.sprite_list[i].x) \
+			+ (win->scene.player.y - win->scene.sprite_list[i].y) \
+			* (win->scene.player.y - win->scene.sprite_list[i].y));
 		i++;
 	}
 	sort_sprites(sprite_order, sprite_distance, win->scene.sprite_nb);
