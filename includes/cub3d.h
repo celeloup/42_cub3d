@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/17 16:23:21 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 17:19:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,9 @@ typedef struct			s_scene
 {
 	double 				plane_x;
 	double				plane_y;
-	//wall (tab)
 	t_sprite			*sprite_list;
 	int					sprite_nb;
-	//player x y
-	//player dir x y
-	//map ?
+	t_vector_d			player;
 	char				pad[4];
 }						t_scene;
 
@@ -173,7 +170,7 @@ void	pixel(t_window *win, int x, int y, int color);
 int		rgb(int r, int g, int b, int t);
 void	sort_sprites(int *order, double *dist, int nb_sprite);
 int		render_next_frame(t_window *win);
-int		raycasting(t_window *win, t_vector_d player);
+int		raycasting(t_window *win);
 void	draw_line_ver(t_window *win, int x, int start, int end, int color);
 
 /*

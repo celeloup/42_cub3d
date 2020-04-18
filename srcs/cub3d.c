@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/16 21:19:27 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 17:19:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ int		render_next_frame(t_window *win)
 	t_vector_d player;
 	player.x = win->set.player_x;
 	player.y = win->set.player_y;
-	raycasting(win, player);
+	win->scene.player = player;
+	raycasting(win);
 	minimap(win);
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
 	return (1);

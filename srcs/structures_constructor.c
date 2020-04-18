@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/17 16:24:12 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/18 17:17:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	scene_constructor(t_scene *scene)
 	scene->plane_y = 0;
 	scene->sprite_list = NULL;
 	scene->sprite_nb = 0;
+	scene->player.x = 0;
+	scene->player.y = 0;
 }
 
 void	img_constructor(t_img *img)
