@@ -1,0 +1,96 @@
+A LIST OF TESTS TO PERFORM ON CUB3D
+
+== REGULAR TESTS BECAUSE OF 42 REQUIREMENTS ==
+
+norminette on srcs
+make
+make clean
+make fclean
+make re
+Makefile doesn't relink everything when one file is changed
+libft if used is in a folder with its own Makefile, called in the main Makefile
+same for the minilibx if sources are provided in the project
+
+
+== FOLLOWING TESTS SHOULD NOT WORK AND RETURN AN ERROR MESSAGE ==
+== YOU SHOULD ALSO CHECK THAT THE PROGRAM DOES NOT LEAK ==
+
+-- GESTION ARGUMENTS -- 
+No argument
+./Cub3D
+
+Too many arguments
+./Cub3D this is too many arguments
+
+Bad arguments
+./Cub3D badargument
+
+Good then bad argument
+./Cub3D maps/map.cub badargument
+
+Bad then good argument
+./Cub3D bad --save
+
+
+-- .CUB FILE PARSING --
+(those tests should NOT open a window in my opinion 
+as the parsing of the entry file should be done 
+before initialising the mlx window to avoid allocating
+unecessary ressources)
+(also you may find some tests to be unecessary 
+or maybe you just decided to parse it differently than me
+i'm just sharing the tests that I made for MY parsing
+those are not officials tests)
+
+Bad extension of file
+./Cub3D maps/bad_maps/bad_extension
+
+Empty map file
+./Cub3D maps/bad_maps/empty_map.cub
+
+Space before argument letter
+./Cub3D maps/bad_maps/spaces_before_letter.cub
+
+** RESOLUTION ARGUMENT **
+Missing resolution argument
+./Cub3D maps/bad_maps/resolution_missing.cub
+
+Too many argument in resolution
+./Cub3D maps/bad_maps/resolution_too_many_argument.cub
+
+Missing argument in resolution
+./Cub3D maps/bad_maps/resolution_missing_argument.cub
+
+Bad argument in resolution
+./Cub3D maps/bad_maps/resolution_bad_argument.cub
+./Cub3D maps/bad_maps/resolution_bad_argument_bis.cub
+
+Negative resolution
+./Cub3D maps/bad_maps/resolution_negative.cub
+
+Null or too small resolution 
+(I consider that if the resolution is too small to actually vizualize 
+anything, it should be considered a bad resolution 
+but it is not specified in the subject 
+so you can actually do whatever you want)
+./Cub3D maps/bad_maps/resolution_null.cub
+./Cub3D maps/bad_maps/resolution_too_small.cub
+
+
+** TEXTURES **
+
+
+
+
+
+
+
+
+
+== TESTS THAT SHOULD WORK (with conditions)==
+
+Multi-spaced arguments (spaces between elements)
+./Cub3D maps/multi_spaced_argument.cub
+
+Resolution bigger than screen-size (the window size should be of the screen size)
+./Cub3D maps/bigger_screen_resolution.cub

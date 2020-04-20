@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 15:11:37 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 20:03:55 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/20 17:56:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	set_res(t_window *win, char *line)
 	free_tab(tab);
 	if (win->set.res_x < 50 || win->set.res_y < 50)
 		quit_error(win, VAL_RES, NULL, NULL);
-	win->set.res_x = fmin(win->set.res_x, SCREEN_MAX_X);
-	win->set.res_y = fmin(win->set.res_y, SCREEN_MAX_Y);
 }
 
 void	set_color(t_window *win, char *line, char c)

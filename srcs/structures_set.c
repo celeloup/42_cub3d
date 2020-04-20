@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:56:03 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 19:38:02 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/20 17:54:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ void	scene_set(t_window *win)
 void	window_set(t_window *win, char *filename)
 {
 	int fd;
+	int	screen_x;
+	int	screen_y;
 
 	if (file_is_ext(filename, ".cub") == 0)
 		quit_error(win, CUB_FILE, NULL, NULL);
@@ -123,6 +125,9 @@ void	window_set(t_window *win, char *filename)
 		quit_error(win, OPEN_FILE, NULL, NULL);
 	settings_set(fd, win);
 	win->mlx_ptr = mlx_init();
+	mlx_get_screen_size(win->mlx_ptr, &screen_x, &screen_y);
+	win->set.res_x = fmin(win->set.res_x, screen_x);
+	win->set.res_y = fmin(win->set.res_y, screen_y);
 	win->win_ptr = mlx_new_window(win->mlx_ptr,
 		win->set.res_x, win->set.res_y, "Cub3D");
 	win->img.img_ptr = mlx_new_image(win->mlx_ptr,
