@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 11:01:29 by celeloup          #+#    #+#              #
-#    Updated: 2020/04/16 17:28:19 by user42           ###   ########.fr        #
+#    Updated: 2020/04/20 15:34:59 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,7 +105,7 @@ clean:
 	$(RM) -r $(OBJS_DIR)
 
 fclean: clean
-	$(MAKE) -sC libft fclean
+	$(RM) $(LIBFT)
 	$(RM) $(NAME)
 
 re:
