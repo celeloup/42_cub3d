@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:26:54 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/20 20:08:55 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/27 16:10:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,8 @@ void	settings_destructor(t_settings *set)
 		i = 0;
 		while (set->map[i])
 		{
-			if (set->map[i])
-			{
-				free(set->map[i]);
-				set->map[i] = NULL;
-			}
+			free(set->map[i]);
+			set->map[i] = NULL;
 			i++;
 		}
 		free(set->map);

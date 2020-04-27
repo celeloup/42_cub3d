@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 20:04:48 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/27 16:55:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ void		settings_constructor(t_settings *set)
 	img_constructor(&set->text_no);
 	img_constructor(&set->text_so);
 	img_constructor(&set->text_s);
-	set->res_x = 0;
-	set->res_y = 0;
-	set->floor = 0;
-	set->ceil = 0;
+	set->res_x = -1;
+	set->res_y = -1;
+	set->floor = -1;
+	set->ceil = -1;
 	set->map = NULL;
 	set->player_orientation = 0;
 }

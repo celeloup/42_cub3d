@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 11:54:17 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/20 17:44:58 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/27 17:29:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,9 @@ void	hook_event(t_window *win)
 
 int		close_window(t_window *win)
 {
-	window_destructor(win);
 	mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
 	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
+	window_destructor(win);
 	if (LEAKS)
 		system("valgrind --tool=memcheck --leak-check=summary \
 			--leak-resolution=high --show-reachable=yes ./Cub3D");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/04 18:02:21 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/10 18:43:44 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/27 16:56:07 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ void	check_map(t_window *win)
 
 void	check_settings(t_window *win)
 {
-	if (!win->set.res_x || !win->set.res_y || !win->set.path_ea
+	if (win->set.res_x == -1 || win->set.res_y == -1 || !win->set.path_ea
 		|| !win->set.path_no || !win->set.path_s || !win->set.path_so
-		|| !win->set.path_we || !win->set.ceil || !win->set.floor
+		|| !win->set.path_we || win->set.ceil == -1 || win->set.floor == -1
 		|| !win->set.map)
 		quit_error(win, "Argument missing in cub file.", NULL, NULL);
 	check_map(win);

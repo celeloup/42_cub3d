@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_define.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/04 15:55:25 by celeloup          #+#    #+#             */
-/*   Updated: 2020/03/09 12:26:10 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/04/27 17:04:29 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@
 # define NB_RES "Wrong number of arguments in map resolution. Two needed."
 # define ARG_RES "Invalid argument(s) in map resolution."
 # define VAL_RES "Wrong value argument in map resolution. Minimum is 50x50."
+# define DUP_RES "Duplication of resolution argument."
 # define NB_COLOR "Wrong number of arguments in color definition. One needed."
 # define ARG_COLOR "Invalid argument(s) in color definition."
 # define VAL_COLOR "Wrong value of color argument. Colors go from 0 to 255."
+# define DUB_COLOR "Duplication of color argument."
 # define NB_TEX "Wrong number of argument in texture description."
+# define DUP_TEX "Duplication of texture argument."
 # define OPEN_TEX_FILE "Couldn't open texture file."
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/16 16:38:37 by user42            #+#    #+#             */
-/*   Updated: 2020/04/18 20:09:26 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/27 17:32:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,13 @@ int			*get_sprite_order(t_window *win)
 	double	sprite_distance[win->scene.sprite_nb];
 	int		i;
 
-	sprite_order = (int*)malloc(sizeof(int) * win->scene.sprite_nb);
+	if (!(sprite_order = (int*)malloc(sizeof(int) * win->scene.sprite_nb)))
+	{
+		ft_putstr_fd("\033[0;31mError: ", 2);
+		ft_putstr_fd("Couldn't allocate memory (malloc).", 2);
+		ft_putstr_fd("\n\033[0m", 2);
+		close_window(win);
+	}
 	i = 0;
 	while (i < win->scene.sprite_nb)
 	{

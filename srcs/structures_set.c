@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:56:03 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/20 17:54:36 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/27 17:39:10 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	set_sprites(t_window *win)
 
 	sprites_nb = count_sprites(win->set.map);
 	win->scene.sprite_nb = sprites_nb;
-	win->scene.sprite_list = malloc(sizeof(t_sprite) * (sprites_nb));
+	if (!(win->scene.sprite_list = malloc(sizeof(t_sprite) * (sprites_nb))))
+		quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
 	i = 0;
 	x = 0;
 	while (win->set.map[i])
@@ -136,6 +137,7 @@ void	window_set(t_window *win, char *filename)
 	&win->img.s_l, &win->img.endian);
 	set_img_texture(win);
 	scene_set(win);
+	close(fd);
 }
 
 void	settings_set(int fd, t_window *win)
@@ -197,15 +199,15 @@ void	add_to_map(t_window *win, char *line)
 
 	if (!win->set.map)
 	{
-		win->set.map = (char**)malloc(sizeof(char*) * 1);
-		if (!win->set.map)
-			quit_error(win, "ERROR MALLOC", NULL, NULL);
+		if (!(win->set.map = (char**)malloc(sizeof(char*) * 1)))
+			quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
 		win->set.map[0] = 0;
 	}
 	len = 0;
 	while (win->set.map[len])
 		len++;
-	tmp = malloc(sizeof(char *) * (len + 2));
+	if (!(tmp = (char**)malloc(sizeof(char *) * (len + 2))))
+		quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
 	len = 0;
 	while (win->set.map[len])
 	{
