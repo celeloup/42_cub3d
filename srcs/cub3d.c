@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/20 17:48:48 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/01 16:02:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	minimap(t_window *win)
 
 int		render_next_frame(t_window *win)
 {
-	mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
+	//mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
+	free(win->img.img_ptr);
 	win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x,
 		win->set.res_y);
 	win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,

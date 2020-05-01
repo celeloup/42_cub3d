@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 15:11:37 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/27 17:07:16 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/01 15:44:11 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ void	set_res(t_window *win, char *line)
 			quit_error(win, VAL_RES, NULL, NULL);
 	}
 	else
+	{
+		free(line);
 		quit_error(win, DUP_RES, NULL, NULL);
+	}
+		
 }
 
 void	set_color(t_window *win, char *line, char c)

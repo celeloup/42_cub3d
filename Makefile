@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 11:01:29 by celeloup          #+#    #+#              #
-#    Updated: 2020/04/20 15:34:59 by user42           ###   ########.fr        #
+#    Updated: 2020/05/01 19:47:48 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ MINILIBX		= $(MLX_DIR)libmlx.a
 HEADER			= $(INCLUDES_DIR)cub3d.h
 
 MLXFLAGS		= -lm -lXext -lX11 -lbsd
-CFLAGS			= -Wall -Wextra -Werror -O2 -g#3 -fsanitize=address,undefined -Wpadded
+CFLAGS			= -Wall -Wextra -Werror -O2 -g3 -fsanitize=address,undefined -Wpadded
 CC				= clang
 
 INCLUDES	= $(addprefix -I, $(INCLUDES_DIR) $(LIBFT_DIR) $(LIBVECT_DIR) $(MLX_DIR))

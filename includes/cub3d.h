@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 20:10:11 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/01 19:54:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ typedef struct			s_img
 	int					endian;
 	int					width;
 	int					height;
+	char				pad[4];
 	char				*name;
+	
 }						t_img;
 
 typedef	struct			s_sprite
@@ -70,6 +72,7 @@ typedef	struct			s_sprite
 
 typedef struct			s_settings
 {
+
 	char				*path_no;
 	char				*path_so;
 	char				*path_we;
@@ -86,6 +89,7 @@ typedef struct			s_settings
 	int					ceil;
 	char				**map;
 	char				player_orientation;
+	char				pad[7];
 }						t_settings;
 
 typedef struct			s_scene
@@ -95,6 +99,7 @@ typedef struct			s_scene
 	t_vector_d			player_direction;
 	t_sprite			*sprite_list;
 	int					sprite_nb;
+	char				pad[4];
 }						t_scene;
 
 typedef struct			s_window

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:26:54 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/27 16:10:45 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/01 16:09:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	img_destructor(t_img *img)
 {
-	(void)img;
+	free(img->img_ptr);
 }
 
 void	scene_destructor(t_scene *scene)
@@ -58,12 +58,15 @@ void	window_destructor(t_window *win)
 {
 	settings_destructor(&win->set);
 	scene_destructor(&win->scene);
-	img_destructor(&win->img);
+	//img_destructor(&win->img);
 	if (win->mlx_ptr)
 	{
-		mlx_destroy_image(win->mlx_ptr, win->set.text_ea.img_ptr);
-		mlx_destroy_image(win->mlx_ptr, win->set.text_so.img_ptr);
-		mlx_destroy_image(win->mlx_ptr, win->set.text_no.img_ptr);
-		mlx_destroy_image(win->mlx_ptr, win->set.text_we.img_ptr);
+		free(win->set.text_no.img_ptr);
+		free(win->set.text_so.img_ptr);
+		free(win->set.text_ea.img_ptr);
+		free(win->set.text_we.img_ptr);
+		free(win->set.text_s.img_ptr);
 	}
+	free(win->mlx_ptr);
+	free(win->img.img_ptr);
 }
