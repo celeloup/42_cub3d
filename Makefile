@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#    By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 11:01:29 by celeloup          #+#    #+#              #
-#    Updated: 2020/05/01 19:47:48 by user42           ###   ########.fr        #
+#    Updated: 2020/05/02 17:19:16 by celeloup         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,16 @@ NAME			= Cub3D
 SRCS1			= cub3d.c \
 					parsing.c \
 					events.c \
+					move.c \
 					utils.c \
 					structures_constructor.c \
 					structures_destructor.c \
 					structures_set.c \
 					settings_set.c \
-					norme.c \
-					sprite.c \
-					raycasting.c
+					sprite_set.c \
+					sprite_render.c \
+					raycasting.c \
+					ray_shooting.c
 
 SRCS			= $(addprefix $(SRCS_DIR), $(SRCS1))
 OBJS			= $(addprefix $(OBJS_DIR), $(SRCS1:.c=.o))
@@ -38,7 +40,7 @@ MINILIBX		= $(MLX_DIR)libmlx.a
 HEADER			= $(INCLUDES_DIR)cub3d.h
 
 MLXFLAGS		= -lm -lXext -lX11 -lbsd
-CFLAGS			= -Wall -Wextra -Werror -O2 -g3 -fsanitize=address,undefined -Wpadded
+CFLAGS			= -Wall -Wextra -Werror -O2 -g#3 -fsanitize=address,undefined -Wpadded
 CC				= clang
 
 INCLUDES	= $(addprefix -I, $(INCLUDES_DIR) $(LIBFT_DIR) $(LIBVECT_DIR) $(MLX_DIR))

@@ -6,13 +6,13 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:07:43 by celeloup          #+#    #+#             */
-/*   Updated: 2020/01/10 12:40:33 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/02 17:26:09 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int		len_tab(char const *s, char c)
+static int		split_len_tab(char const *s, char c)
 {
 	int len;
 	int i;
@@ -63,7 +63,7 @@ char			**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	len = len_tab(s, c);
+	len = split_len_tab(s, c);
 	tab = (char **)malloc(sizeof(char*) * (len + 1));
 	if (!tab)
 		return (NULL);

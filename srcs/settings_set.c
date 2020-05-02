@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   settings_set.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 15:11:37 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/01 15:44:11 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 14:35:37 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	set_res(t_window *win, char *line)
 		free(line);
 		quit_error(win, DUP_RES, NULL, NULL);
 	}
-		
 }
 
 void	set_color(t_window *win, char *line, char c)
@@ -110,4 +109,32 @@ void	set_player(t_window *win, int x, int y)
 	}
 	else
 		quit_error(win, "Too many players in map. One needed.", NULL, NULL);
+}
+
+void	add_to_map(t_window *win, char *line)
+{
+	int		len;
+	char	**tmp;
+
+	if (!win->set.map)
+	{
+		if (!(win->set.map = (char**)malloc(sizeof(char*) * 1)))
+			quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
+		win->set.map[0] = 0;
+	}
+	len = 0;
+	while (win->set.map[len])
+		len++;
+	if (!(tmp = (char**)malloc(sizeof(char *) * (len + 2))))
+		quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
+	len = 0;
+	while (win->set.map[len])
+	{
+		tmp[len] = ft_strdup(win->set.map[len]);
+		len++;
+	}
+	tmp[len] = ft_strdup(line);
+	tmp[len + 1] = 0;
+	free_tab(win->set.map);
+	win->set.map = tmp;
 }

@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:22:28 by celeloup          #+#    #+#             */
-/*   Updated: 2020/02/03 15:22:23 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/02 16:26:30 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char			*sub;
 	unsigned int	len_str;
 
-	if (!s || len < 0)
+	if (!s || !len)
 		return (NULL);
 	i = 0;
 	len_str = ft_strlen(s);

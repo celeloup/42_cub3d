@@ -3,116 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   structures_set.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:56:03 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/01 15:39:51 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 17:19:44 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-#include <stdio.h>
-
-void	sprite_constructor(t_sprite *sprite, t_img texture, int x, int y)
-{
-	sprite->texture = texture;
-	sprite->x = x + 0.5;
-	sprite->y = y + 0.5;
-}
-
-int		count_sprites(char **map)
-{
-	int i;
-	int j;
-	int sprites_nb;
-
-	i = 0;
-	sprites_nb = 0;
-	while (map[i])
-	{
-		j = 0;
-		while (map[i][j])
-		{
-			if (map[i][j] == '2')
-				sprites_nb++;
-			j++;
-		}
-		i++;
-	}
-	return (sprites_nb);
-}
-
-void	set_sprites(t_window *win)
-{
-	int j;
-	int i;
-	int x;
-	int sprites_nb;
-
-	sprites_nb = count_sprites(win->set.map);
-	win->scene.sprite_nb = sprites_nb;
-	if (!(win->scene.sprite_list = malloc(sizeof(t_sprite) * (sprites_nb))))
-		quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
-	i = 0;
-	x = 0;
-	while (win->set.map[i])
-	{
-		j = 0;
-		while (win->set.map[i][j])
-		{
-			if (win->set.map[i][j] == '2')
-			{
-				sprite_constructor(&win->scene.sprite_list[x], \
-					win->set.text_s, i, j);
-				x++;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-void	set_img_texture(t_window *win)
-{
-	win->set.text_no.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
-		win->set.path_no, &win->set.text_no.width, &win->set.text_no.height);
-	win->set.text_no.data = (int*)mlx_get_data_addr(win->set.text_no.img_ptr, \
-		&win->set.text_no.bpp, &win->set.text_no.s_l, &win->set.text_no.endian);
-	win->set.text_no.name = "north";
-	win->set.text_so.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
-		win->set.path_so, &win->set.text_so.width, &win->set.text_so.height);
-	win->set.text_so.data = (int*)mlx_get_data_addr(win->set.text_so.img_ptr, \
-		&win->set.text_so.bpp, &win->set.text_so.s_l, &win->set.text_so.endian);
-	win->set.text_so.name = "south";
-	win->set.text_ea.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
-		win->set.path_ea, &win->set.text_ea.width, &win->set.text_ea.height);
-	win->set.text_ea.data = (int*)mlx_get_data_addr(win->set.text_ea.img_ptr, \
-		&win->set.text_ea.bpp, &win->set.text_ea.s_l, &win->set.text_ea.endian);
-	win->set.text_ea.name = "east";
-	win->set.text_we.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
-		win->set.path_we, &win->set.text_we.width, &win->set.text_we.height);
-	win->set.text_we.data = (int*)mlx_get_data_addr(win->set.text_we.img_ptr, \
-		&win->set.text_we.bpp, &win->set.text_we.s_l, &win->set.text_we.endian);
-	win->set.text_we.name = "west";
-	win->set.text_s.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
-		win->set.path_s, &win->set.text_s.width, &win->set.text_s.height);
-	win->set.text_s.data = (int*)mlx_get_data_addr(win->set.text_s.img_ptr, \
-		&win->set.text_s.bpp, &win->set.text_s.s_l, &win->set.text_s.endian);
-	win->set.text_s.name = "sprite";
-}
-
-void	scene_set(t_window *win)
-{
-	if (win->set.player_orientation == 'W')
-		win->scene.plane = d_vec_constructor(-0.66, 0);
-	else if (win->set.player_orientation == 'E')
-		win->scene.plane = d_vec_constructor(0.66, 0);
-	else if (win->set.player_orientation == 'S')
-		win->scene.plane = d_vec_constructor(0, -0.66);
-	else if (win->set.player_orientation == 'N')
-		win->scene.plane = d_vec_constructor(0, 0.66);
-	set_sprites(win);
-}
 
 void	window_set(t_window *win, char *filename)
 {
@@ -192,30 +90,44 @@ int		parse_arguments(t_window *win, char *line)
 	return (1);
 }
 
-void	add_to_map(t_window *win, char *line)
+void	scene_set(t_window *win)
 {
-	int		len;
-	char	**tmp;
+	if (win->set.player_orientation == 'W')
+		win->scene.plane = d_vec_constructor(-0.66, 0);
+	else if (win->set.player_orientation == 'E')
+		win->scene.plane = d_vec_constructor(0.66, 0);
+	else if (win->set.player_orientation == 'S')
+		win->scene.plane = d_vec_constructor(0, -0.66);
+	else if (win->set.player_orientation == 'N')
+		win->scene.plane = d_vec_constructor(0, 0.66);
+	set_sprites(win);
+}
 
-	if (!win->set.map)
-	{
-		if (!(win->set.map = (char**)malloc(sizeof(char*) * 1)))
-			quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
-		win->set.map[0] = 0;
-	}
-	len = 0;
-	while (win->set.map[len])
-		len++;
-	if (!(tmp = (char**)malloc(sizeof(char *) * (len + 2))))
-		quit_error(win, "Couldn't allocate memory (malloc).", NULL, NULL);
-	len = 0;
-	while (win->set.map[len])
-	{
-		tmp[len] = ft_strdup(win->set.map[len]);
-		len++;
-	}
-	tmp[len] = ft_strdup(line);
-	tmp[len + 1] = 0;
-	free_tab(win->set.map);
-	win->set.map = tmp;
+void	set_img_texture(t_window *win)
+{
+	win->set.text_no.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
+		win->set.path_no, &win->set.text_no.width, &win->set.text_no.height);
+	win->set.text_no.data = (int*)mlx_get_data_addr(win->set.text_no.img_ptr, \
+		&win->set.text_no.bpp, &win->set.text_no.s_l, &win->set.text_no.endian);
+	win->set.text_no.name = "north";
+	win->set.text_so.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
+		win->set.path_so, &win->set.text_so.width, &win->set.text_so.height);
+	win->set.text_so.data = (int*)mlx_get_data_addr(win->set.text_so.img_ptr, \
+		&win->set.text_so.bpp, &win->set.text_so.s_l, &win->set.text_so.endian);
+	win->set.text_so.name = "south";
+	win->set.text_ea.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
+		win->set.path_ea, &win->set.text_ea.width, &win->set.text_ea.height);
+	win->set.text_ea.data = (int*)mlx_get_data_addr(win->set.text_ea.img_ptr, \
+		&win->set.text_ea.bpp, &win->set.text_ea.s_l, &win->set.text_ea.endian);
+	win->set.text_ea.name = "east";
+	win->set.text_we.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
+		win->set.path_we, &win->set.text_we.width, &win->set.text_we.height);
+	win->set.text_we.data = (int*)mlx_get_data_addr(win->set.text_we.img_ptr, \
+		&win->set.text_we.bpp, &win->set.text_we.s_l, &win->set.text_we.endian);
+	win->set.text_we.name = "west";
+	win->set.text_s.img_ptr = mlx_xpm_file_to_image(win->mlx_ptr, \
+		win->set.path_s, &win->set.text_s.width, &win->set.text_s.height);
+	win->set.text_s.data = (int*)mlx_get_data_addr(win->set.text_s.img_ptr, \
+		&win->set.text_s.bpp, &win->set.text_s.s_l, &win->set.text_s.endian);
+	win->set.text_s.name = "sprite";
 }

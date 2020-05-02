@@ -3,117 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/01 16:02:57 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 17:19:32 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-#include <stdio.h>
-
-/*
-** BONUS LIST IDEA
-** - menu de depart
-** - minimap
-** - editeur map dans minimap
-** - pieces secretes
-** - mini zelda : tu dois recuperer les trois triforces pour
-** acceder à l'epee de legende
-** - mini puzzle (trois mecaniques differentes)
-** - son musique
-** - animation, particule
-** - hud
-** - petite histoire ?
-*/
-
-void	v_line(t_window *win, int x, t_vector_i limits, int color)
-{
-	while (limits.x < limits.y)
-	{
-		pixel(win, x, limits.x, color);
-		limits.x++;
-	}
-}
-
-void	draw_square(t_window *win, int x, int y, int size, int color)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while (i < size)
-	{
-		j = 0;
-		while (j < size)
-		{
-			pixel(win, x + i, y + j, color);
-			j++;
-		}
-		i++;
-	}
-}
-
-void	minimap(t_window *win)
-{
-	int x;
-	int y;
-	int offsetx;
-	int offsety;
-
-	x = 0;
-	offsetx = win->set.res_x - 300;
-	while (win->set.map[x])
-	{
-		y = 0;
-		offsety = win->set.res_y - 20;
-		while (win->set.map[x][y])
-		{
-			if (win->set.map[x][y] == '1')
-				draw_square(win, y + offsety, x + offsetx, 5, RED);
-			if (win->set.map[x][y] == '0')
-				draw_square(win, y + offsety, x + offsetx, 5, WHITE);
-			if (win->set.map[x][y] == '2')
-				draw_square(win, y + offsety, x + offsetx, 5, YELLOW);
-			if (win->set.map[x][y] == 'N' || win->set.map[x][y] == 'W')
-				draw_square(win, y + offsety, x + offsetx, 5, BLUE);
-			if (x == (int)win->scene.player.x && y == (int)win->scene.player.y)
-				draw_square(win, y + offsety, x + offsetx, 5, BLUE);
-			y++;
-			offsety += 5;
-		}
-		x++;
-		offsetx += 5;
-	}
-}
-
-int		render_next_frame(t_window *win)
-{
-	//mlx_destroy_image(win->mlx_ptr, win->img.img_ptr);
-	free(win->img.img_ptr);
-	win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x,
-		win->set.res_y);
-	win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
-		&win->img.bpp, &win->img.s_l, &win->img.endian);
-	raycasting(win);
-	minimap(win);
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
-	return (1);
-}
-
-void	print_sprites(t_scene *scene)
-{
-	int i;
-
-	i = 0;
-	while (i < scene->sprite_nb)
-	{
-		printf("sprite %d at (%f,%f)\n",
-			i, scene->sprite_list[i].x, scene->sprite_list[i].y);
-		i++;
-	}
-}
 
 int		main(int argc, char **argv)
 {
@@ -129,8 +26,89 @@ int		main(int argc, char **argv)
 	if (argc == 3)
 		screenshot(&win);
 	mlx_loop_hook(win.mlx_ptr, render_next_frame, &win);
-	hook_event(&win);
+	mlx_hook(win.win_ptr, 2, (1L << 0), key_press, &win);
+	mlx_hook(win.win_ptr, 17, (1L << 17), close_window, &win);
 	mlx_loop(win.mlx_ptr);
 	close_window(&win);
 	return (EXIT_SUCCESS);
+}
+
+int		render_next_frame(t_window *win)
+{
+	free(win->img.img_ptr);
+	win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x,
+		win->set.res_y);
+	win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
+		&win->img.bpp, &win->img.s_l, &win->img.endian);
+	raycasting(win);
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
+	return (1);
+}
+
+/*
+** https://stackoverflow.com/questions/2654480
+** /writing-bmp-image-in-pure-c-c-without-other-libraries
+*/
+
+void	screenshot(t_window *win)
+{
+	int				fd;
+	unsigned char	padding[3];
+	unsigned char	file_header[14 + 40];
+	int				i;
+
+	fd = open("screenshot.bmp", O_CREAT | O_WRONLY | O_TRUNC, 0700);
+	padding[0] = 0;
+	padding[1] = 0;
+	padding[2] = 0;
+	ft_bzero(file_header, 14 + 40);
+	get_file_header(file_header, win, (4 - (win->set.res_x * 4) % 4) % 4);
+	render_next_frame(win);
+	write(fd, file_header, 14 + 40);
+	i = win->set.res_y - 1;
+	while (i > 0)
+	{
+		write(fd, (unsigned char *)win->img.data + (i * win->set.res_x * 4),
+			4 * win->set.res_x);
+		write(fd, padding, (4 - (win->set.res_x * 4) % 4) % 4);
+		i--;
+	}
+	close(fd);
+	ft_putstr_fd("\033[32;1mScreenshot saved as 'screenshot.bmp'.\033[0m\n", 1);
+	close_window(win);
+}
+
+void	get_file_header(unsigned char *file_header, t_window *win, int pad_size)
+{
+	int	file_size;
+
+	file_size = 14 + 40 + (4 * win->set.res_x + pad_size) * win->set.res_y;
+	file_header[0] = (unsigned char)('B');
+	file_header[1] = (unsigned char)('M');
+	file_header[2] = (unsigned char)(file_size);
+	file_header[3] = (unsigned char)(file_size >> 8);
+	file_header[4] = (unsigned char)(file_size >> 16);
+	file_header[5] = (unsigned char)(file_size >> 24);
+	file_header[10] = (unsigned char)(14 + 40);
+	file_header[0 + 14] = (unsigned char)(40);
+	file_header[4 + 14] = (unsigned char)(win->set.res_x);
+	file_header[5 + 14] = (unsigned char)(win->set.res_x >> 8);
+	file_header[6 + 14] = (unsigned char)(win->set.res_x >> 16);
+	file_header[7 + 14] = (unsigned char)(win->set.res_x >> 24);
+	file_header[8 + 14] = (unsigned char)(win->set.res_y);
+	file_header[9 + 14] = (unsigned char)(win->set.res_y >> 8);
+	file_header[10 + 14] = (unsigned char)(win->set.res_y >> 16);
+	file_header[11 + 14] = (unsigned char)(win->set.res_y >> 24);
+	file_header[12 + 14] = (unsigned char)(1);
+	file_header[14 + 14] = (unsigned char)(4 * 8);
+}
+
+int		try_open_file(char *file)
+{
+	int ret;
+
+	if ((ret = open(file, O_RDONLY)) == -1)
+		return (0);
+	close(ret);
+	return (1);
 }

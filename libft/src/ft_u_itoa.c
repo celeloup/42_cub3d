@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 14:38:17 by celeloup          #+#    #+#             */
-/*   Updated: 2020/01/31 14:41:16 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/02 16:27:10 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ static int		nbdigit(unsigned int n)
 
 	neg = 0;
 	len = 1;
-	if (n < 0)
-	{
-		neg++;
-		n = n * (-1);
-	}
 	while (n / 10 >= 1)
 	{
 		len++;

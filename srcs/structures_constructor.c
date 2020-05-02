@@ -3,51 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   structures_constructor.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/27 16:55:58 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 17:19:54 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-t_vector_d	d_vec_constructor(double x, double y)
+void		window_constructor(t_window *win)
 {
-	t_vector_d vector;
-
-	vector.x = x;
-	vector.y = y;
-	return (vector);
-}
-
-t_vector_i	i_vec_constructor(int x, int y)
-{
-	t_vector_i vector;
-
-	vector.x = x;
-	vector.y = y;
-	return (vector);
-}
-
-void		scene_constructor(t_scene *scene)
-{
-	scene->plane.x = 0;
-	scene->plane.y = 0;
-	scene->sprite_list = NULL;
-	scene->sprite_nb = 0;
-	scene->player.x = 0;
-	scene->player.y = 0;
-}
-
-void		img_constructor(t_img *img)
-{
-	img->img_ptr = NULL;
-	img->data = NULL;
-	img->s_l = 0;
-	img->bpp = 0;
-	img->endian = 0;
-	img->name = NULL;
+	win->mlx_ptr = NULL;
+	win->win_ptr = NULL;
+	win->filename = NULL;
+	settings_constructor(&win->set);
+	img_constructor(&win->img);
+	scene_constructor(&win->scene);
 }
 
 void		settings_constructor(t_settings *set)
@@ -70,12 +42,22 @@ void		settings_constructor(t_settings *set)
 	set->player_orientation = 0;
 }
 
-void		window_constructor(t_window *win)
+void		img_constructor(t_img *img)
 {
-	win->mlx_ptr = NULL;
-	win->win_ptr = NULL;
-	win->filename = NULL;
-	settings_constructor(&win->set);
-	img_constructor(&win->img);
-	scene_constructor(&win->scene);
+	img->img_ptr = NULL;
+	img->data = NULL;
+	img->s_l = 0;
+	img->bpp = 0;
+	img->endian = 0;
+	img->name = NULL;
+}
+
+void		scene_constructor(t_scene *scene)
+{
+	scene->plane.x = 0;
+	scene->plane.y = 0;
+	scene->sprite_list = NULL;
+	scene->sprite_nb = 0;
+	scene->player.x = 0;
+	scene->player.y = 0;
 }

@@ -3,27 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   structures_destructor.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:26:54 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/01 16:09:45 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 16:55:34 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-void	img_destructor(t_img *img)
+void	window_destructor(t_window *win)
 {
-	free(img->img_ptr);
-}
-
-void	scene_destructor(t_scene *scene)
-{
-	if (scene->sprite_list)
+	settings_destructor(&win->set);
+	scene_destructor(&win->scene);
+	if (win->mlx_ptr)
 	{
-		free(scene->sprite_list);
-		scene->sprite_list = NULL;
+		free(win->set.text_no.img_ptr);
+		free(win->set.text_so.img_ptr);
+		free(win->set.text_ea.img_ptr);
+		free(win->set.text_we.img_ptr);
+		free(win->set.text_s.img_ptr);
 	}
+	free(win->mlx_ptr);
+	free(win->img.img_ptr);
 }
 
 void	settings_destructor(t_settings *set)
@@ -54,19 +56,16 @@ void	settings_destructor(t_settings *set)
 	}
 }
 
-void	window_destructor(t_window *win)
+void	scene_destructor(t_scene *scene)
 {
-	settings_destructor(&win->set);
-	scene_destructor(&win->scene);
-	//img_destructor(&win->img);
-	if (win->mlx_ptr)
+	if (scene->sprite_list)
 	{
-		free(win->set.text_no.img_ptr);
-		free(win->set.text_so.img_ptr);
-		free(win->set.text_ea.img_ptr);
-		free(win->set.text_we.img_ptr);
-		free(win->set.text_s.img_ptr);
+		free(scene->sprite_list);
+		scene->sprite_list = NULL;
 	}
-	free(win->mlx_ptr);
-	free(win->img.img_ptr);
+}
+
+void	img_destructor(t_img *img)
+{
+	free(img->img_ptr);
 }

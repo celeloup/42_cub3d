@@ -6,7 +6,7 @@
 #    By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 15:51:10 by celeloup          #+#    #+#              #
-#    Updated: 2020/03/02 12:33:04 by celeloup         ###   ########.fr        #
+#    Updated: 2020/05/02 16:31:04 by celeloup         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,10 @@ SRC_NAME = ft_memset.c \
 	ft_strjoinfree.c \
 	ft_strncpy.c \
 	get_next_line.c \
-	ft_strcmp.c
+	ft_strcmp.c \
+	ft_len_tab.c \
+	ft_free_tab.c \
+	ft_strisalpha.c
 
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
@@ -73,7 +76,7 @@ SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 
-CFLAGS = #-Werror -Wall -Wextra
+CFLAGS = -Werror -Wall -Wextra
 
 ##################
 ##    COLORS    ##

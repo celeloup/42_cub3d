@@ -3,88 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 11:55:34 by celeloup          #+#    #+#             */
-/*   Updated: 2020/04/18 20:04:33 by user42           ###   ########.fr       */
+/*   Updated: 2020/05/02 17:20:09 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 #include <stdio.h>
 
-int		try_open_file(char *file)
+t_vector_d	d_vec_constructor(double x, double y)
 {
-	int ret;
+	t_vector_d vector;
 
-	if ((ret = open(file, O_RDONLY)) == -1)
-		return (0);
-	close(ret);
-	return (1);
+	vector.x = x;
+	vector.y = y;
+	return (vector);
 }
 
-int		strisalpha(char *str)
+t_vector_i	i_vec_constructor(int x, int y)
 {
-	int i;
+	t_vector_i vector;
 
-	i = 0;
-	while (str[i])
+	vector.x = x;
+	vector.y = y;
+	return (vector);
+}
+
+void		pixel(t_window *win, int x, int y, int color)
+{
+	if (x >= 0 && x < win->set.res_x && y >= 0 && y < win->set.res_y)
+		(win->img.data)[y * win->set.res_x + x] = color;
+}
+
+int			rgb(int r, int g, int b, int t)
+{
+	return (t << 24 | r << 16 | g << 8 | b);
+}
+
+void		v_line(t_window *win, int x, t_vector_i limits, int color)
+{
+	while (limits.x < limits.y)
 	{
-		if (ft_isalpha(str[i]))
-			return (1);
-		i++;
+		pixel(win, x, limits.x, color);
+		limits.x++;
 	}
-	return (0);
-}
-
-void	print_settings(t_settings set)
-{
-	printf("\n  MAP VARIABLES  \n");
-	printf("\nRes X -> %d\nRes Y -> %d\n", set.res_x, set.res_y);
-	printf("path_no -> %s\n", set.path_no);
-	printf("path_so -> %s\n", set.path_so);
-	printf("path_we -> %s\n", set.path_we);
-	printf("path_ea -> %s\n", set.path_ea);
-	printf("path_s -> %s\n", set.path_s);
-	printf("floor -> %x\n", set.floor);
-	printf("ceil -> %x\n\n", set.ceil);
-	print_map(set.map);
-}
-
-void	print_map(char **map)
-{
-	int i;
-
-	printf("MAP\n");
-	i = 0;
-	while (map[i])
-	{
-		ft_putstr(map[i]);
-		ft_putchar('\n');
-		i++;
-	}
-}
-
-void	free_tab(char **tab)
-{
-	int i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-	tab = NULL;
-}
-
-int		len_tab(char **tab)
-{
-	int i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
 }
