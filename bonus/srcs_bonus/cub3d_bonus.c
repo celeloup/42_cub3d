@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.c                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 16:08:06 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/03 16:22:30 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes_bonus/cub3d_bonus.h"
+#include <stdio.h>
 
 int		main(int argc, char **argv)
 {
@@ -33,15 +34,64 @@ int		main(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
+void	dialogue_box(t_window *win)
+{
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->ui.dialog_box.img_ptr, 150, 400);
+	/*
+	int		width = 400;
+	int		height = 80;
+
+	int x = 150;
+	int y = 400;
+	while (x < (150 + width))
+	{
+		y = 400;
+		while (y < 400 + height)
+		{
+			pixel(win, x, y, WHITE);
+			y++;
+		}
+		x++;
+	}*/
+	//mlx_string_put(win->mlx_ptr, win->win_ptr, 160, 410, WHITE, "This is a dialogue");
+}
+
+void	animation_text(t_window *win, int frameCount)
+{
+	static int index = 1;
+	char *text = "This is a dialogue.";
+	if (index <= (int)ft_strlen(text))
+	{
+		char *to_print = ft_substr(text, 0, index);
+		mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, to_print);
+		free(to_print);
+		index += frameCount;
+	}
+	else
+	{
+		mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, text);
+		return ;
+	}
+}
+
 int		render_next_frame(t_window *win)
 {
+	static int frameCount = 0;
+	if (frameCount == 0)
+		frameCount++;
+	else
+		frameCount--;
 	// free(win->img.img_ptr);
 	// win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x,
 	// 	win->set.res_y);
 	// win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
 	// 	&win->img.bpp, &win->img.s_l, &win->img.endian);
 	raycasting(win);
+	minimap(win);
+	
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
+	dialogue_box(win);
+	animation_text(win, frameCount);
 	return (1);
 }
 

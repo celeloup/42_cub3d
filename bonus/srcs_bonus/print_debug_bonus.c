@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_debug.c                                      :+:      :+:    :+:   */
+/*   print_debug_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/02 14:31:45 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/02 14:32:23 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/03 12:28:37 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes_bonus/cub3d_bonus.h"
 
 void	print_sprites(t_scene *scene)
 {

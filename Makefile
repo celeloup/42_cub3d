@@ -6,34 +6,59 @@
 #    By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 11:01:29 by celeloup          #+#    #+#              #
-#    Updated: 2020/05/02 17:19:16 by celeloup         ###   ########.fr        #
+#    Updated: 2020/05/03 12:32:31 by celeloup         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			= Cub3D
+NAME_BONUS		= TheLegendOf_
 
-SRCS1			= cub3d.c \
-					parsing.c \
-					events.c \
-					move.c \
-					utils.c \
-					structures_constructor.c \
-					structures_destructor.c \
-					structures_set.c \
-					settings_set.c \
-					sprite_set.c \
-					sprite_render.c \
-					raycasting.c \
-					ray_shooting.c
+SRCS_FILE		= cub3d.c \
+				parsing.c \
+				events.c \
+				move.c \
+				utils.c \
+				structures_constructor.c \
+				structures_destructor.c \
+				structures_set.c \
+				settings_set.c \
+				sprite_set.c \
+				sprite_render.c \
+				raycasting.c \
+				ray_shooting.c
 
-SRCS			= $(addprefix $(SRCS_DIR), $(SRCS1))
-OBJS			= $(addprefix $(OBJS_DIR), $(SRCS1:.c=.o))
+SRCS_FILE_BONUS = cub3d_bonus.c \
+				parsing_bonus.c \
+				events_bonus.c \
+				move_bonus.c \
+				utils_bonus.c \
+				structures_constructor_bonus.c \
+				structures_destructor_bonus.c \
+				structures_set_bonus.c \
+				settings_set_bonus.c \
+				sprite_set_bonus.c \
+				sprite_render_bonus.c \
+				raycasting_bonus.c \
+				ray_shooting_bonus.c \
+				minimap_bonus.c
+				#print_debug_bonus.c
+
+SRCS			= $(addprefix $(SRCS_DIR), $(SRCS_FILE))
+OBJS			= $(addprefix $(OBJS_DIR), $(SRCS_FILE:.c=.o))
+
+SRCS_BONUS		= $(addprefix $(SRCS_DIR_BONUS), $(SRCS_FILE_BONUS))
+OBJS_BONUS		= $(addprefix $(OBJS_DIR_BONUS), $(SRCS_FILE_BONUS:.c=.o))
+SRCS_DIR_BONUS	= ./bonus/srcs_bonus/
+OBJS_DIR_BONUS	= ./bonus/objs_bonus/
+INCLUDES_DIR_BONUS = ./bonus/includes_bonus/
+INCLUDES_BONUS	= $(addprefix -I, $(INCLUDES_DIR_BONUS) $(LIBFT_DIR) $(LIBVECT_DIR) $(MLX_DIR))
+HEADER_BONUS	= $(INCLUDES_DIR_BONUS)cub3d_bonus.h
 
 SRCS_DIR		= ./srcs/
 OBJS_DIR		= ./objs/
 INCLUDES_DIR	= ./includes/
-LIBFT_DIR		= ./libft/
-MLX_DIR			= ./minilibx-linux/
+LIBFT_DIR		= ./lib/libft/
+MLX_DIR			= ./lib/minilibx-linux/
 
 LIBFT			= $(LIBFT_DIR)libft.a
 MINILIBX		= $(MLX_DIR)libmlx.a
@@ -70,7 +95,7 @@ _CUT		= "\033[k"
 ##   TARGETS    ##
 ##################
 
-.PHONY: all launch clean fclean re norme title
+.PHONY: all launch clean fclean re norme title bonus
 .SILENT:
 
 all: launch
@@ -86,7 +111,7 @@ $(OBJS_DIR):
 	mkdir $@
 
 $(LIBFT): FORCE
-	$(MAKE) -sC libft
+	$(MAKE) -sC $(LIBFT_DIR)
 	echo
 
 $(MINILIBX): FORCE
@@ -102,7 +127,7 @@ $(OBJS): $(OBJS_DIR)%.o: $(SRCS_DIR)%.c $(HEADER)
 	printf $<
 
 clean:
-	$(MAKE) -sC libft clean
+	$(MAKE) -sC $(LIBFT_DIR) clean
 	$(MAKE) -sC $(MLX_DIR) clean
 	$(RM) -r $(OBJS_DIR)
 
@@ -119,5 +144,32 @@ norme:
 	norminette $(SRCS) $(HEADER)
 	echo
 	echo "LIBFT"
-	$(MAKE) -C libft norme
+	$(MAKE) -C $(LIBFT_DIR) norme
 	echo
+	
+bonus:
+	echo "BONUS"
+	$(MAKE) $(LIBFT)
+	$(MAKE) $(MINILIBX)
+	echo $(_CLEAR)$(_YELLOW)"building - "$(_GREEN)$(NAME_BONUS)$(_END)
+	$(MAKE) $(NAME_BONUS)
+	echo $(_GREEN)"\nDone. Have a fun time playing :)"$(_END)$(_SHOW_CURS)
+
+$(NAME_BONUS): $(OBJS_DIR_BONUS) $(OBJS_BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT) $(MLXFLAGS) $(MINILIBX) -o $(NAME_BONUS)
+
+$(OBJS_DIR_BONUS):
+	mkdir $@
+
+$(OBJS_BONUS): $(OBJS_DIR_BONUS)%.o: $(SRCS_DIR_BONUS)%.c $(HEADER_BONUS)
+	$(CC) $(CFLAGS) $(INCLUDES_BONUS) -c $< -o $@
+	printf $<
+
+bonus_clean:
+	$(MAKE) -sC $(LIBFT_DIR) clean
+	$(MAKE) -sC $(MLX_DIR) clean
+	$(RM) -r $(OBJS_DIR_BONUS)
+
+bonus_fclean: bonus_clean
+	$(RM) $(LIBFT)
+	$(RM) $(NAME_BONUS)

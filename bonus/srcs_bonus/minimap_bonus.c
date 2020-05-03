@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minimap_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/03 12:25:01 by celeloup          #+#    #+#             */
+/*   Updated: 2020/05/03 12:25:21 by celeloup         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes_bonus/cub3d_bonus.h"
+
 void	draw_square(t_window *win, int x, int y, int size, int color)
 {
 	int i;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 12:28:06 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/03 15:49:33 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 #  include <key_linux.h>
 # endif
 
-# include "../lib/libft/src/libft.h"
-# include "error_define.h"
-# include "lgl_define.h"
+# include "../../lib/libft/src/libft.h"
+# include "error_define_bonus.h"
+# include "lgl_define_bonus.h"
 # include <mlx.h>
 # include <fcntl.h>
 # include <math.h>
@@ -99,6 +99,11 @@ typedef struct	s_scene
 	char		pad[4];
 }				t_scene;
 
+typedef	struct	s_ui
+{
+	t_img		dialog_box;
+}				t_ui;
+
 typedef struct	s_window
 {
 	char		*filename;
@@ -107,6 +112,7 @@ typedef struct	s_window
 	t_img		img;
 	t_settings	set;
 	t_scene		scene;
+	t_ui		ui;
 }				t_window;
 
 /*
@@ -226,5 +232,7 @@ void			pixel(t_window *win, int x, int y, int color);
 int				rgb(int r, int g, int b, int t);
 void			v_line(t_window *win, int x, t_vector_i limits, \
 	int color);
+
+void	minimap(t_window *win);
 
 #endif
