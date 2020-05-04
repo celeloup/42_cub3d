@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 11:54:17 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 15:02:44 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/04 17:59:02 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ int		key_press(int keycode, t_window *win)
 		look_right(win);
 	if (keycode == K_AR_L)
 		look_left(win);
+	if (keycode == K_B)
+		win->dialogue = (win->dialogue ? 0 : 1);
+	if (keycode == K_H)
+		ft_putstr("test");
 	return (0);
 }
 

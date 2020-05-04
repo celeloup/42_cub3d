@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 14:52:47 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 15:50:23 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/04 15:52:25 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void		window_constructor(t_window *win)
 	img_constructor(&win->img);
 	scene_constructor(&win->scene);
 	img_constructor(&win->ui.dialog_box);
+	win->frameCount = 0;
+	win->dialogue = 0;
 }
 
 void		settings_constructor(t_settings *set)

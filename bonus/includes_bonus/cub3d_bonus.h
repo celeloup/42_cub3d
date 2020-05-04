@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:59 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 15:49:33 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/04 15:52:08 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ typedef struct	s_window
 	t_settings	set;
 	t_scene		scene;
 	t_ui		ui;
+	int			frameCount;
+	int			dialogue;
 }				t_window;
 
 /*
@@ -234,5 +236,6 @@ void			v_line(t_window *win, int x, t_vector_i limits, \
 	int color);
 
 void	minimap(t_window *win);
+void	animation_text(t_window *win, int frameCount);
 
 #endif

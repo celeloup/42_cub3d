@@ -6,12 +6,43 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/03 16:22:30 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/04 21:04:59 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes_bonus/cub3d_bonus.h"
 #include <stdio.h>
+#include <time.h>
+
+// int		fading_color(int start_color, int end_color, int time)
+// {
+
+// }
+
+void	screen_title(t_window *win)
+{
+	// choose language (facultatif)
+	// animation "a game by"
+	// "Celia Leloup"
+	// "@celeloup"
+	// dialogue poppin
+	int color = 0;
+	clock_t oldtime = clock();
+	
+	while (color < 255)
+	{
+		mlx_string_put(win->mlx_ptr, win->win_ptr, 200, 200, rgb(color, color, color, 1), "this is a test");
+		clock_t newtime = clock();
+		if (newtime > oldtime + 5000)
+		{
+			color++;
+			oldtime = newtime;
+		}
+	}
+	sleep(2);
+}
+
+
 
 int		main(int argc, char **argv)
 {
@@ -26,6 +57,7 @@ int		main(int argc, char **argv)
 	window_set(&win, argv[1]);
 	if (argc == 3)
 		screenshot(&win);
+	screen_title(&win);
 	mlx_loop_hook(win.mlx_ptr, render_next_frame, &win);
 	mlx_hook(win.win_ptr, 2, (1L << 0), key_press, &win);
 	mlx_hook(win.win_ptr, 17, (1L << 17), close_window, &win);
@@ -34,64 +66,64 @@ int		main(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-void	dialogue_box(t_window *win)
+void	dialogue_box(t_window *win, int x, int y)
 {
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->ui.dialog_box.img_ptr, 150, 400);
-	/*
-	int		width = 400;
-	int		height = 80;
-
-	int x = 150;
-	int y = 400;
-	while (x < (150 + width))
-	{
-		y = 400;
-		while (y < 400 + height)
-		{
-			pixel(win, x, y, WHITE);
-			y++;
-		}
-		x++;
-	}*/
-	//mlx_string_put(win->mlx_ptr, win->win_ptr, 160, 410, WHITE, "This is a dialogue");
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->ui.dialog_box.img_ptr, x, y);
 }
 
 void	animation_text(t_window *win, int frameCount)
 {
 	static int index = 1;
+	static int delay = 0;
 	char *text = "This is a dialogue.";
-	if (index <= (int)ft_strlen(text))
+	if (frameCount == 10 && delay < 4)
+		delay++;
+	if (delay > 3)
 	{
-		char *to_print = ft_substr(text, 0, index);
-		mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, to_print);
-		free(to_print);
-		index += frameCount;
+		if (index <= (int)ft_strlen(text))
+		{
+			char *to_print = ft_substr(text, 0, index);
+			mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, to_print);
+			free(to_print);
+			if (frameCount == 1)
+				index += frameCount;
+		}
+		else
+		{
+			mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, text);
+			return ;
+		}
 	}
-	else
-	{
-		mlx_string_put(win->mlx_ptr, win->win_ptr, 170, 425, BLACK, text);
-		return ;
-	}
+	
 }
 
 int		render_next_frame(t_window *win)
 {
-	static int frameCount = 0;
-	if (frameCount == 0)
-		frameCount++;
+	static int test = 0;
+	if (test == 0)
+		win->frameCount++;
 	else
-		frameCount--;
+		win->frameCount--;
+	if (win->frameCount == 10)
+		test = 1;
+	else if (win->frameCount == 0)
+		test = 0;
 	// free(win->img.img_ptr);
 	// win->img.img_ptr = mlx_new_image(win->mlx_ptr, win->set.res_x,
 	// 	win->set.res_y);
 	// win->img.data = (int *)mlx_get_data_addr(win->img.img_ptr,
 	// 	&win->img.bpp, &win->img.s_l, &win->img.endian);
-	raycasting(win);
-	minimap(win);
 	
+	
+	raycasting(win);
+	//minimap(win);
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img.img_ptr, 0, 0);
-	dialogue_box(win);
-	animation_text(win, frameCount);
+	if (win->dialogue == 1)
+	{
+		dialogue_box(win, 150, 400);
+		animation_text(win, win->frameCount);
+	}
+		
 	return (1);
 }
 
