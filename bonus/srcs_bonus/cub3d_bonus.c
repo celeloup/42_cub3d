@@ -6,7 +6,7 @@
 /*   By: celeloup <celeloup@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 11:02:16 by celeloup          #+#    #+#             */
-/*   Updated: 2020/05/04 21:04:59 by celeloup         ###   ########.fr       */
+/*   Updated: 2020/05/05 19:29:13 by celeloup         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int		render_next_frame(t_window *win)
 		animation_text(win, win->frameCount);
 	}
 		
-	return (1);
+	return (0);
 }
 
 /*
